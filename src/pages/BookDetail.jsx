@@ -10,11 +10,11 @@ export default function BookDetail() {
   ];
 
   return (
-    <div className="container mx-auto p-4">
+    <main className="container mx-auto p-4 grow">
       <h1 className="text-3xl font-bold">{book.title}</h1>
       <p className="text-gray-600">by {book.author}</p>
       <p className="mt-4">{book.description}</p>
       <ReviewList reviews={reviews} />
-    </div>
+    </main>
   );
 }

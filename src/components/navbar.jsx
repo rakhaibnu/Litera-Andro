@@ -3,7 +3,7 @@ import Logo from "./Logo";
 
 export default function Navbar() {
   return (
-    <nav className="flex justify-between bg-primary p-4 shadow-md font-merriweather pl-15 pr-15">
+    <nav className="flex justify-between bg-hero p-4 shadow-md font-merriweather px-15 ">
       <div className="container mx-auto flex items-center">
       <Logo className="text-blue-500"/> 
         <Link to="/" className="text-2xl font-bold text-black flex justify-self-start">LITERA</Link>
