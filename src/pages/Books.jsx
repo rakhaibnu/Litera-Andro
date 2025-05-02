@@ -9,15 +9,15 @@ export default function Books() {
   const books = [
     {
       id: 1,
-      title: "Atomic Habits",
-      author: "James Clear",
+      title: "The Hunger Games",
+      author: "Suzanne Collins",
       cover: "https://via.placeholder.com/150",
       rating: 4.5
     },
     {
       id: 2,
-      title: "Deep Work",
-      author: "Cal Newport",
+      title: "Atomic Habits",
+      author: "James Clear",
       cover: "https://via.placeholder.com/150",
       rating: 4.2
     },

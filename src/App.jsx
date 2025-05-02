@@ -15,7 +15,7 @@ export default function App() {
         <Route element={<AppLayout />}>
           <Route index element={<Index/>} />
           <Route path="books" element={<Books />} />
-          <Route path="review " element={<Review />} />
+          <Route path="review" element={<Review />} />
           <Route path="book/:id" element={<BookDetail />} />
           <Route path="signin" element={<Signin />} />
           <Route path="signup" element={<Signup />} />

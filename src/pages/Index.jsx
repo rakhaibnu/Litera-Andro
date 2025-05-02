@@ -8,14 +8,14 @@ export default function Home() {
   const books = [
     {
       id: 1,
-      title: "Atomic Habits",
-      author: "James Clear",
+      title: "The Hunger Games",
+      author: "Suzzane Collins",
       cover: "https://via.placeholder.com/150",
     },
     {
       id: 2,
-      title: "The Alchemist",
-      author: "Paulo Coelho",
+      title: "Atomic Habits",
+      author: "James Clea",
       cover: "https://via.placeholder.com/150",
     },
   ];
