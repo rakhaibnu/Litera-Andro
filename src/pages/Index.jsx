@@ -22,7 +22,7 @@ export default function Home() {
 
   return (
     <main className="grow w-full">
-      <div className="flex items-center  justify-between px-15  bg-hero py-5">
+      <div className="flex items-center bg-hero justify-between px-15 shadow-lg py-5">
         <div className="flex-col font-merriweather ">
           <h1 className="text-5xl">
             Find Your Next Great Read With Trusted Reviews!

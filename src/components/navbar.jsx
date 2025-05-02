@@ -10,9 +10,9 @@ export default function Navbar() {
         </div>
         <div className="flex items-center text-black space-x-5 font-lato ">
           <Link to="/" className="">Home</Link>
-          <Link to="/Book" className="">Books</Link>
-          <Link to="/Reviews" className="">Reviews</Link>
-          <Link to="/profile" className= "bg-light px-4 py-2 rounded-full border-0 hover:bg-dark hover:text-white transition duration-300">Login</Link>
+          <Link to="/Books" className="">Books</Link>
+          <Link to="/Review" className="">Reviews</Link>
+          <Link to="/Signin" className= "bg-light px-4 py-2 rounded-full border-0 hover:bg-dark hover:text-white transition duration-300">Login</Link>
         </div> 
     </nav>
   );
