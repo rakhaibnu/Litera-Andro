@@ -2,7 +2,6 @@
 
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@100..900&family=Lato:wght@100;300;400;700;900&family=Merriweather:wght@300;400;700;900&display=swap");
 
-
 @theme {
   --font-merriweather: merriweather, "Sans-serif";
   --font-lato: lato, "Sans-serif";
@@ -15,6 +14,10 @@
   --color-hero: #F6F7F4;
   --color-head: #323232;
   --color-body: #323232;
+  --color-cancel: #FEB6C4;
+  --color-apply: #98C9FF;
+  --color-white: #ffffff;
+  --color-black: #000000;
 
   --color-latte-cream-0-5: #FEFDFC; 
   --color-latte-cream-1: #FEFBF9;
