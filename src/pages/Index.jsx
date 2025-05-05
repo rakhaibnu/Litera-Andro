@@ -2,7 +2,7 @@ import BookCard from "../components/BookCard";
 import SearchBar from "../components/SearchBar";
 import { CircleChevronRight } from "lucide-react";
 import { CircleChevronLeft } from "lucide-react";
-import hero from "../assets/hero1.svg";
+import Hero from "../assets/hero1.svg";
 
 export default function Home() {
   const books = [
@@ -29,7 +29,7 @@ export default function Home() {
           </h1>
           <p>Dive into in-depth book reviews across various genres</p>
         </div>
-        <img src={hero} alt="" className="" />
+        <img src={Hero} alt="" className="h-50" />
       </div>
       <div className="flex items-center justify-between px-15">
         <h1 className="text-3xl font-bold my-4">Popular Books</h1>

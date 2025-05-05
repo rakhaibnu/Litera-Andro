@@ -6,6 +6,7 @@ import Books from "./pages/Books";
 import BookDetail from "./pages/BookDetail";
 import Index from "./pages/Index";
 import Review from "./pages/Review";
+import Home from "./pages/Index";
 
 
 export default function App() {
