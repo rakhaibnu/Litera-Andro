@@ -15,7 +15,7 @@ export default function Home() {
     {
       id: 2,
       title: "Atomic Habits",
-      author: "James Clea",
+      author: "James Clear",
       cover: "https://via.placeholder.com/150",
     },
   ];

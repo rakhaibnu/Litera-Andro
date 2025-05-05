@@ -3,13 +3,13 @@ import LiteraLogo from "../assets/Logo.png";
 
 const Footer = () => {
   return (
-    <footer className="font-inter bg-secondary py-8 px-4 w-full">
-      <div className="container mx-auto">
+    <footer className="bg-secondary w-full">
+      <div className="container mx-auto py-8 font-lato">
         {/* Main Footer Content */}
         <div className="grid grid-cols-1 md:grid-cols-5 gap-8 ">
           {/* About Section */}
           <div className="flex flex-col">
-            <h3 className="font-bold mb-3 text-head">ABOUT</h3>
+            <h3 className="font-bold mb-3 text-deep-mocha-brown-8 text-2xl">ABOUT</h3>
             <ul className="flex flex-col gap-2">
               <li>
                 <Link
@@ -45,7 +45,7 @@ const Footer = () => {
 
           {/* Resources Section */}
           <div className="flex flex-col">
-            <h3 className="font-bold mb-3 text-head">RESOURCES</h3>
+            <h3 className="font-bold mb-3 text-deep-mocha-brown-8 text-2xl">RESOURCES</h3>
             <ul className="flex flex-col gap-2">
               <li>
                 <Link to="/about" className="hover:text-dark transition-colors">
@@ -73,7 +73,7 @@ const Footer = () => {
 
           {/* Community Section */}
           <div className="flex flex-col">
-            <h3 className="font-bold mb-3 text-head">COMMUNITY</h3>
+            <h3 className="font-bold mb-3 text-deep-mocha-brown-8 text-2xl">COMMUNITY</h3>
             <ul className="flex flex-col gap-2">
               <li>
                 <Link to="/forum" className="hover:text-dark transition-colors">
@@ -98,12 +98,12 @@ const Footer = () => {
 
           {/* Contact Section */}
           <div className="flex flex-col">
-            <h3 className="font-bold mb-3 text-head">CONTACT</h3>
+            <h3 className="font-bold mb-3 text-deep-mocha-brown-8 text-2xl">CONTACT</h3>
             <div className="flex space-x-4 mb-4">
               {/* Facebook Icon */}
               <a href="#" className="hover:text-dark transition-colors">
                 <svg
-                  className="w-6 h-6"
+                  className="w-10 h-10"
                   fill="currentColor"
                   viewBox="0 0 24 24"
                   aria-hidden="true"
@@ -118,7 +118,7 @@ const Footer = () => {
               {/* Twitter Icon */}
               <a href="#" className="hover:text-dark transition-colors">
                 <svg
-                  className="w-6 h-6"
+                  className="w-10 h-10"
                   fill="currentColor"
                   viewBox="0 0 24 24"
                   aria-hidden="true"
@@ -129,7 +129,7 @@ const Footer = () => {
               {/* Instagram Icon */}
               <a href="#" className="hover:text-dark transition-colors">
                 <svg
-                  className="w-6 h-6"
+                  className="w-10 h-10"
                   fill="currentColor"
                   viewBox="0 0 24 24"
                   aria-hidden="true"
@@ -143,7 +143,7 @@ const Footer = () => {
               </a>
               
             </div>
-            <h3 className="font-bold mb-3 text-head">SUPPORT</h3>
+            <h3 className="font-bold mb-3 text-deep-mocha-brown-8 text-2xl">SUPPORT</h3>
             <ul className="flex flex-col gap-2">
               <li>
                 <Link to="/faq" className="hover:text-dark transition-colors">
@@ -167,10 +167,13 @@ const Footer = () => {
             <img
               src={LiteraLogo || "/placeholder.svg"}
               alt="Litera Logo"
-              className="h-20"
+              className="h-25 "
             />
           </div>
         </div>
+      </div>
+      <div className="bg-sage-green-8 font-inter py-5 text-white flex items-center justify-center">
+        <span className="font-regular">© 2025 Litera. All rights reserved</span>
       </div>
     </footer>
   );
