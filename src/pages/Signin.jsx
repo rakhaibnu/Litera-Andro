@@ -91,14 +91,14 @@ export default function SignIn() {
                 {showPassword ? (
                   isEyeHovered ? (
                     <EyeSlashSolid
-                      className="h-5 w-5 text-charcoal-gray-5 cursor-pointer"
+                      className="h-6 w-6 text-charcoal-gray-5 cursor-pointer"
                       onMouseEnter={() => setIsHovered(true)}
                       onMouseLeave={() => setIsHovered(false)}
                       onClick={() => setShowPassword(!showPassword)}
                     />
                   ) : (
                     <EyeSlashIcon
-                      className="h-5 w-5 text-charcoal-gray-2 cursor-pointer"
+                      className="h-6 w-6 text-charcoal-gray-2 cursor-pointer"
                       onMouseEnter={() => setIsHovered(true)}
                       onMouseLeave={() => setIsHovered(false)}
                       onClick={() => setShowPassword(!showPassword)}
@@ -107,14 +107,14 @@ export default function SignIn() {
                 ) : (
                   isEyeHovered ? (
                     <EyeIconSolid
-                      className="h-5 w-5 text-charcoal-gray-5 cursor-pointer"
+                      className="h-6 w-6 text-charcoal-gray-5 cursor-pointer"
                       onMouseEnter={() => setIsHovered(true)}
                       onMouseLeave={() => setIsHovered(false)}
                       onClick={() => setShowPassword(!showPassword)}
                     />
                   ) : (
                     <EyeIcon
-                      className="h-5 w-5 text-charcoal-gray-2 cursor-pointer"
+                      className="h-6 w-6 text-charcoal-gray-2 cursor-pointer"
                       onMouseEnter={() => setIsHovered(true)}
                       onMouseLeave={() => setIsHovered(false)}
                       onClick={() => setShowPassword(!showPassword)}
