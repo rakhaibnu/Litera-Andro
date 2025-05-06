@@ -7,15 +7,16 @@ import { useNavigate } from "react-router-dom";
 import Button from "../components/Button";
 import { EyeIcon } from "@heroicons/react/24/outline";
 import { EyeIcon as EyeIconSolid } from "@heroicons/react/24/solid";
-import { EyeSlashIcon } from "@heroicons/react/24/outline"; // Perbaikan: menggunakan versi yang sama
-import { EyeSlashIcon as EyeSlashSolid } from "@heroicons/react/24/solid"; // Perbaikan: menggunakan versi solid
+import { EyeSlashIcon } from "@heroicons/react/24/outline"; 
+import { EyeSlashIcon as EyeSlashSolid } from "@heroicons/react/24/solid"; 
+import {FormField} from "../components/FormField";
 
 export default function SignIn() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+  const [isEyeHovered, setIsEyeHovered] = useState(false);
   const navigate = useNavigate();
-  const [isEyeHovered, setIsHovered] = useState(false);
-  const [showPassword, setShowPassword] = useState(false);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -50,80 +51,29 @@ export default function SignIn() {
             </h2>
           </div>
           <form className="font-lato space-y-6 w-full max-w-lg" onSubmit={handleSubmit}>
-            <div>
-              <label
-                htmlFor="email"
-                className="block text-medium font-medium text-gray-700 w-full"
-              >
-                Email 
-              </label>
-              <input
-                id="email"
-                name="email"
-                type="email"
-                autoComplete="email"
-                required
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="mt-1 block w-full px-3 py-2 border border-charcoal-gray-2 rounded-2xl shadow-sm focus:outline-none focus:ring focus:border-dark"
-              />
-            </div>
-
-            <div>
-              <label
-                htmlFor="password"
-                className="block text-medium font-normal text-gray-700"
-              >
-                Password
-              </label>
-              <div className="relative mt-1">
-                <input
-                  id="password"
-                  name="password"
-                  type={showPassword ? "text" : "password"}
-                  autoComplete="current-password"
-                  required
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  className="block w-full px-3 py-2 pr-10 border border-charcoal-gray-2 rounded-2xl shadow-sm focus:outline-none focus:ring focus:border-dark"
-                />
-                <div className="absolute inset-y-0 right-0 flex items-center pr-3">
-                {showPassword ? (
-                  isEyeHovered ? (
-                    <EyeSlashSolid
-                      className="h-6 w-6 text-charcoal-gray-5 cursor-pointer"
-                      onMouseEnter={() => setIsHovered(true)}
-                      onMouseLeave={() => setIsHovered(false)}
-                      onClick={() => setShowPassword(!showPassword)}
-                    />
-                  ) : (
-                    <EyeSlashIcon
-                      className="h-6 w-6 text-charcoal-gray-2 cursor-pointer"
-                      onMouseEnter={() => setIsHovered(true)}
-                      onMouseLeave={() => setIsHovered(false)}
-                      onClick={() => setShowPassword(!showPassword)}
-                    />
-                  )
-                ) : (
-                  isEyeHovered ? (
-                    <EyeIconSolid
-                      className="h-6 w-6 text-charcoal-gray-5 cursor-pointer"
-                      onMouseEnter={() => setIsHovered(true)}
-                      onMouseLeave={() => setIsHovered(false)}
-                      onClick={() => setShowPassword(!showPassword)}
-                    />
-                  ) : (
-                    <EyeIcon
-                      className="h-6 w-6 text-charcoal-gray-2 cursor-pointer"
-                      onMouseEnter={() => setIsHovered(true)}
-                      onMouseLeave={() => setIsHovered(false)}
-                      onClick={() => setShowPassword(!showPassword)}
-                    />
-                  )
-                )}
-                </div>
-              </div>
-            </div>
+            <FormField
+              id="email"
+              label="Email"
+              type="email"
+              autoComplete="email"
+              required={true}
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />            
+            <FormField
+              id="password"
+              label="Password"
+              type="password" 
+              autoComplete="current-password"
+              required={true}
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              isPasswordVisible={isPasswordVisible}
+              togglePasswordVisibility={() => setIsPasswordVisible(!isPasswordVisible)}
+              isEyeHovered={isEyeHovered}
+              handleEyeMouseEnter={() => setIsEyeHovered(true)}
+              handleEyeMouseLeave={() => setIsEyeHovered(false)}
+            />
             <Button 
               text={"Sign in"}
               className="w-full flex justify-center py-2 mt-28 px-4 border border-transparent rounded-2xl shadow-sm text-lg font-medium text-deep-mocha-brown-3 bg-warm-sand-4 hover:bg-light transition hover:text-deep-mocha-brown-7"
