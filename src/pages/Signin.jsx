@@ -5,10 +5,6 @@ import Sign_in from "../assets/sign_in.png";
 import { ArrowLeftIcon } from "@heroicons/react/20/solid";
 import { useNavigate } from "react-router-dom";
 import Button from "../components/Button";
-import { EyeIcon } from "@heroicons/react/24/outline";
-import { EyeIcon as EyeIconSolid } from "@heroicons/react/24/solid";
-import { EyeSlashIcon } from "@heroicons/react/24/outline"; 
-import { EyeSlashIcon as EyeSlashSolid } from "@heroicons/react/24/solid"; 
 import {FormField} from "../components/FormField";
 
 export default function SignIn() {
@@ -36,14 +32,15 @@ export default function SignIn() {
       </div>   
       
       <div className="max-w-[50%] w-full bg-white flex flex-col mt-5 ml-5">
-        <div 
-          className="flex w-fit items-center font-lato text-charcoal-gray-1 text-md hover:cursor-pointer hover:text-charcoal-gray-5 transition-colors duration-300" 
-          onClick={handleBack}
-        >
-          <ArrowLeftIcon className="w-8 h-8 mr-2"/> 
-          <span>Back to Home</span>
+        <div className="pl-5 mb-5">
+          <div 
+            className="flex w-fit items-center font-lato text-charcoal-gray-1 text-md hover:cursor-pointer hover:text-charcoal-gray-5 transition-colors duration-300" 
+            onClick={handleBack}
+          >
+            <ArrowLeftIcon className="w-8 h-8 mr-2 flex-shrink-0"/> 
+            <span>Back to Home</span>
+          </div>
         </div>
-      
         <div className="flex flex-col items-center py-10 w-full">
           <div className="font-merriweather font-bold text-center mb-8">
             <h2 className="text-5xl font-bold text-gray-900">

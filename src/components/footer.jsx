@@ -173,7 +173,7 @@ const Footer = () => {
         </div>
       </div>
       <div className="bg-sage-green-8 font-inter py-5 text-white flex items-center justify-center">
-        <span className="font-regular">© 2025 Litera. All rights reserved</span>
+        <span className="font-regular text-sm">© 2025 Litera. All rights reserved</span>
       </div>
     </footer>
   );

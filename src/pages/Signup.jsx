@@ -1,143 +1,89 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import Litera from "../assets/Litera.png";
+import Sign_in from "../assets/SignUp.png";
+import Button from "../components/Button";
+import { FormField } from "../components/FormField";
 
 export default function SignUp() {
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    password: "",
-    confirmPassword: ""
-  });
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
-  };
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+  const [isEyeHovered, setIsEyeHovered] = useState(false);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Handle signup logic here
-    console.log(formData);
+    console.log(name, email, password);
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4">
-      <div className="max-w-md w-full bg-white p-8 rounded-lg shadow-md">
-        <div className="text-center mb-8">
-          <h2 className="text-3xl font-bold text-gray-900">
-            Create your account
-          </h2>
+    <div className="min-h-screen min-w-full flex color-white">
+      <div className="max-w-[50%] min-h-screen bg-warm-sand-3 w-full flex flex-col items-center justify-center">
+        <img src={Litera} alt="Litera" className="mb-16" />
+        <img src={Sign_in} alt="Sign in" className="max-w-3/4 w-full h-auto mb-5" />
+      </div>
+
+      <div className="flex flex-col items-center py-10 w-full">
+        <div className="font-merriweather font-bold text-center mb-6">
+          <h2 className="text-5xl font-bold text-gray-900">Sign Up</h2>
         </div>
-
-        <form className="space-y-6" onSubmit={handleSubmit}>
-          <div>
-            <label htmlFor="name" className="block text-sm font-medium text-gray-700">
-              Full Name
-            </label>
-            <input
+        <div className="flex flex-col items-center py-4 w-full">
+          <form
+            className="font-lato space-y-3 w-full max-w-lg"
+            onSubmit={handleSubmit}
+          >
+            <FormField
               id="name"
-              name="name"
+              label="Name"
               type="text"
-              autoComplete="name"
-              required
-              value={formData.name}
-              onChange={handleChange}
-              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-dark focus:border-dark"
+              autoComplete="text"
+              required={true}
+              value={name}
+              onChange={(e) => setName(e.target.value)}
             />
-          </div>
-
-          <div>
-            <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-              Email address
-            </label>
-            <input
+            <FormField
               id="email"
-              name="email"
+              label="Email"
               type="email"
               autoComplete="email"
-              required
-              value={formData.email}
-              onChange={handleChange}
-              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-dark focus:border-dark"
+              required={true}
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
             />
-          </div>
-
-          <div>
-            <label htmlFor="password" className="block text-sm font-medium text-gray-700">
-              Password
-            </label>
-            <input
+            <FormField
               id="password"
-              name="password"
+              label="Password"
               type="password"
               autoComplete="new-password"
-              required
-              value={formData.password}
-              onChange={handleChange}
-              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-dark focus:border-dark"
+              required={true}
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              isPasswordVisible={isPasswordVisible}
+              togglePasswordVisibility={() =>
+                setIsPasswordVisible(!isPasswordVisible)
+              }
+              isEyeHovered={isEyeHovered}
+              handleEyeMouseEnter={() => setIsEyeHovered(true)}
+              handleEyeMouseLeave={() => setIsEyeHovered(false)}
             />
-          </div>
-
-          <div>
-            <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700">
-              Confirm Password
-            </label>
-            <input
-              id="confirmPassword"
-              name="confirmPassword"
-              type="password"
-              autoComplete="new-password"
-              required
-              value={formData.confirmPassword}
-              onChange={handleChange}
-              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-dark focus:border-dark"
+            <Button
+              text={"Sign Up"}
+              className="w-full flex justify-center py-2 mt-28 px-4 border border-transparent rounded-2xl shadow-sm text-lg font-medium text-deep-mocha-brown-3 bg-warm-sand-4 hover:bg-light transition hover:text-deep-mocha-brown-7"
             />
-          </div>
-
-          <div className="flex items-center">
-            <input
-              id="terms"
-              name="terms"
-              type="checkbox"
-              required
-              className="h-4 w-4 text-dark focus:ring-dark border-gray-300 rounded"
-            />
-            <label htmlFor="terms" className="ml-2 block text-sm text-gray-900">
-              I agree to the <Link to="/terms" className="text-dark hover:text-light">Terms and Conditions</Link>
-            </label>
-          </div>
-
-          <div>
-            <button
-              type="submit"
-              className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-dark hover:bg-light hover:text-dark transition"
-            >
-              Sign up
-            </button>
-          </div>
-        </form>
-
-        <div className="mt-6">
-          <div className="relative">
-            <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t border-gray-300"></div>
-            </div>
-            <div className="relative flex justify-center text-sm">
-              <span className="px-2 bg-white text-gray-500">
-                Already have an account?
-              </span>
-            </div>
-          </div>
-
+          </form>
           <div className="mt-6">
+            <div className="w-full border-t border-gray-300"></div>
+          </div>
+          <div className="relative flex justify-center text-sm mt-2">
+            <span className="px-2 bg-white text-gray-500">
+              Already have an Account?
+            </span>
             <Link
-              to="/signin"
-              className="w-full flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50"
+              to="/Signin"
+              className="no-underline font-medium text-warm-sand-5 hover:text-warm-sand-7 transition-colors duration-300"
             >
-              Sign in
+              Sign In
             </Link>
           </div>
         </div>
