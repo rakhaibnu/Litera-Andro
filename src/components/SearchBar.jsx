@@ -16,11 +16,11 @@ export default function SearchBar({ onSearch }) {
           type="text" 
           value={query} 
           onChange={(e) => setQuery(e.target.value)} 
-          className="px-6 py-3 pr-12 border  rounded-full w-full" 
+          className="px-6 py-3 pr-12 border  rounded-full w-full " 
           placeholder="Search books by title, author, or genre..." 
         />
         <MagnifyingGlassIcon 
-          className="h-6 w-6 text-gray-500  cursor-pointer absolute right-4 top-1/2 transform -translate-y-1/2"
+          className="h-6 w-6 text-latte-cream-10  cursor-pointer absolute right-4 top-1/2 transform -translate-y-1/2"
           aria-hidden="true" 
           onClick={() => handleSearch(query)}
         />
