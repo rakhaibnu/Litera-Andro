@@ -63,7 +63,7 @@ export default function Reviews() {
   });
 
   return (
-    <div className="container mx-auto p-4 max-w-6xl">
+    <div className="container mx-auto p-4 max-w-6xl min-h-screen pt-28">
       {/* Header and Search Section */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
         <h1 className="text-3xl font-bold">Reviews</h1>

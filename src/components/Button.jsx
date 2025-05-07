@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 
-export default function Button({ text, onClick, to, className = "" }) {
-  const defaultButtonClass = "bg-dark font-lato font-bold py-2 px-4 rounded-full hover:bg-dark-700 transition duration-300";
+export default function Button({ text, onClick, to, className = "" , leftIcon, rightIcon }) {
+  const defaultButtonClass = "font-lato py-2 px-4 rounded-full hover:bg-dark-700 transition duration-300";
   const buttonClass = className ? `${defaultButtonClass} ${className}` : defaultButtonClass;
 
   if (to) {
@@ -14,7 +14,9 @@ export default function Button({ text, onClick, to, className = "" }) {
 
   return (
     <button onClick={onClick} className={buttonClass}>
+      {leftIcon && <span className="mr-2">{leftIcon}</span>}
       {text}
+      {rightIcon && <span className="ml-2">{rightIcon}</span>}
     </button>
   );
 }
