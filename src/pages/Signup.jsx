@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import Litera from "../assets/Litera.png";
 import Sign_in from "../assets/SignUp.png";
+
 import Button from "../components/Button";
 import { FormField } from "../components/FormField";
 
@@ -11,6 +12,7 @@ export default function SignUp() {
   const [password, setPassword] = useState("");
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [isEyeHovered, setIsEyeHovered] = useState(false);
+
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -24,11 +26,14 @@ export default function SignUp() {
         <img src={Sign_in} alt="Sign in" className="max-w-3/4 w-full h-auto mb-5" />
       </div>
 
+      
+
       <div className="flex flex-col items-center py-10 w-full">
         <div className="font-merriweather font-bold text-center mb-6">
           <h2 className="text-5xl font-bold text-gray-900">Sign Up</h2>
         </div>
         <div className="flex flex-col items-center py-4 w-full">
+  
           <form
             className="font-lato space-y-3 w-full max-w-lg"
             onSubmit={handleSubmit}

@@ -7,6 +7,7 @@ import BookDetail from './pages/BookDetail';
 import Index from './pages/Index';
 import Review from './pages/Review';
 import NoReview from './pages/NoReview';
+import NoLogin from './pages/NoLogin';
 
 export default function App() {
   return (
@@ -18,6 +19,7 @@ export default function App() {
           <Route path="review" element={<Review />} />
           <Route path="book/:id" element={<BookDetail />} />
           <Route path="noreview" element={<NoReview />} />
+          <Route path="nologin" element={<NoLogin />} />
         </Route>
         <Route path="signin" element={<Signin />} />
         <Route path="signup" element={<Signup />} />

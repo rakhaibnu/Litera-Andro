@@ -8,7 +8,7 @@ export default function NoReview() {
         <p className="font-lato">Find a book you love and share your thoughts</p>
         <img src={ImageEmpty} alt="No Reviews" className="w-2xs pt-4" />
         
-        <Link to="/review" className="mt-6 bg-warm-sand-5 hover:bg-dark text-white text-lg px-4 py-2 rounded-full transition duration-300">
+        <Link to="/review" className="mt-6 bg-warm-sand-6 hover:bg-dark text-white text-lg px-4 py-2 rounded-full transition duration-300 text-center">
             Go review a book
         </Link>
         </div>
