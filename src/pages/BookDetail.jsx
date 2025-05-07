@@ -38,7 +38,7 @@ export default function BookDetail() {
   };
 
   return (
-    <main className="container mx-auto p-4 max-w-6xl">
+    <main className="container mx-auto py-40 max-w-6xl">
       <div className="flex flex-col md:flex-row gap-8">
         {/* Book Cover */}
         <div className="w-full md:w-1/3">

@@ -4,12 +4,12 @@ import LiteraLogo from "../assets/Logo.png";
 const Footer = () => {
   return (
     <footer className="bg-secondary w-full">
-      <div className="container mx-auto py-8 font-lato">
+      <div className="container mx-auto py-3 font-lato">
         {/* Main Footer Content */}
         <div className="grid grid-cols-1 md:grid-cols-5 gap-8 ">
           {/* About Section */}
           <div className="flex flex-col">
-            <h3 className="font-bold mb-3 text-deep-mocha-brown-8 text-2xl">ABOUT</h3>
+            <p className="font-bold mb-3 text-deep-mocha-brown-8 text-lg">ABOUT</p>
             <ul className="flex flex-col gap-2">
               <li>
                 <Link
@@ -45,7 +45,7 @@ const Footer = () => {
 
           {/* Resources Section */}
           <div className="flex flex-col">
-            <h3 className="font-bold mb-3 text-deep-mocha-brown-8 text-2xl">RESOURCES</h3>
+            <p className="font-bold mb-3 text-deep-mocha-brown-8 text-lg">RESOURCES</p>
             <ul className="flex flex-col gap-2">
               <li>
                 <Link to="/about" className="hover:text-dark transition-colors">
@@ -73,7 +73,7 @@ const Footer = () => {
 
           {/* Community Section */}
           <div className="flex flex-col">
-            <h3 className="font-bold mb-3 text-deep-mocha-brown-8 text-2xl">COMMUNITY</h3>
+            <p className="font-bold mb-3 text-deep-mocha-brown-8 text-lg">COMMUNITY</p>
             <ul className="flex flex-col gap-2">
               <li>
                 <Link to="/forum" className="hover:text-dark transition-colors">
@@ -98,7 +98,7 @@ const Footer = () => {
 
           {/* Contact Section */}
           <div className="flex flex-col">
-            <h3 className="font-bold mb-3 text-deep-mocha-brown-8 text-2xl">CONTACT</h3>
+            <h5 className="font-bold mb-3 text-deep-mocha-brown-8 text-lg">CONTACT</h5>
             <div className="flex space-x-4 mb-4">
               {/* Facebook Icon */}
               <a href="#" className="hover:text-dark transition-colors">
@@ -143,7 +143,7 @@ const Footer = () => {
               </a>
               
             </div>
-            <h3 className="font-bold mb-3 text-deep-mocha-brown-8 text-2xl">SUPPORT</h3>
+            <h5  className="font-bold mb-3 text-deep-mocha-brown-8 text-lg">SUPPORT</h5>
             <ul className="flex flex-col gap-2">
               <li>
                 <Link to="/faq" className="hover:text-dark transition-colors">
@@ -172,7 +172,7 @@ const Footer = () => {
           </div>
         </div>
       </div>
-      <div className="bg-sage-green-8 font-inter py-5 text-white flex items-center justify-center">
+      <div className="bg-sage-green-8 font-inter py-3 text-white flex items-center justify-center">
         <span className="font-regular text-sm">© 2025 Litera. All rights reserved</span>
       </div>
     </footer>

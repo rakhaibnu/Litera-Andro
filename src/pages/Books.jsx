@@ -85,7 +85,26 @@ export default function Books() {
       bookType: 'nonFiction',
       genres: ['selfHelp', 'psychology']
     },
-    // Tambahkan buku lain sesuai kebutuhan
+    {
+      id: 3,
+      title: '1984',
+      author: 'George Orwell',
+      cover: 'https://via.placeholder.com/150',
+      rating: 4.8,
+      categories: ['popularBook'],
+      bookType: 'fiction',
+      genres: ['dystopian', 'politics']
+    },
+    {
+      id: 4,
+      title: 'Sapiens: A Brief History of Humankind',
+      author: 'Yuval Noah Harari',
+      cover: 'https://via.placeholder.com/150',
+      rating: 4.6,
+      categories: ['bestSeller'],
+      bookType: 'nonFiction',
+      genres: ['history', 'philosophy']
+    }
   ];
 
   // Reset semua filter
