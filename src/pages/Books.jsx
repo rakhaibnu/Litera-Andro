@@ -394,7 +394,7 @@ export default function Books() {
                 leftIcon={<FunnelIcon className="w-6 h-6 text-gray-500" />}
                 className={`
                   flex cursor-pointer rounded-lg font-lato font-regular py-2 px-6 transition duration-300
-                  ${activeFilterCount > 0 ? 'bg-cancel hover:bg-red-300' : 'bg-gray-200 text-gray-400 cursor-not-allowed'} 
+                  ${activeFilterCount > 0 ? 'bg-apply hover:bg-blue-400' : 'bg-gray-200 text-gray-400 cursor-not-allowed'} 
                   text-charcoal-gray-4
                 `}
                 disabled={activeFilterCount === 0}

@@ -33,7 +33,7 @@ export default function Navbar() {
       >
         {/* Logo section */}
         <div className="flex items-center">
-          <Logo to="/"/> 
+          <Logo to="/" /> 
           {!scrolled && (
             <Link to="/" className="text-2xl font-bold ml-2">LITERA</Link>
           )}    
