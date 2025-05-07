@@ -107,7 +107,7 @@ export default function Books() {
     }
   ];
 
-  // Reset semua filter
+  
   const resetFilters = () => {
     setFilters({
       categories: {
@@ -216,13 +216,11 @@ export default function Books() {
   return (
     <div className="min-h-screen p-4 pt-24 md:pt-28">
       <div className="max-w-7xl mx-auto flex flex-col md:flex-row gap-6">
-        {/* Sidebar */}
         <aside className="w-full md:w-1/3 bg-latte-cream-2 rounded-3xl border-latte-cream-10 border p-6">
           <h2 className="font-merriweather font-bold text-2xl mb-6 text-center">
             Filters
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {/* Categories */}
             <div>
               <h3 className="font-merriweather font-bold text-lg mb-3">
                 Categories
@@ -255,7 +253,6 @@ export default function Books() {
               </div>
             </div>
 
-            {/* Book Type */}
             <div>
               <h3 className="font-merriweather font-bold text-lg mb-3">
                 Book Type
@@ -276,13 +273,11 @@ export default function Books() {
               </div>
             </div>
 
-            {/* Genres */}
             <div className="col-span-2">
               <h3 className="font-merriweather font-bold text-lg mb-3">
                 Genres
               </h3>
               <div className="grid grid-cols-2 gap-x-4 gap-y-2">
-                {/* Fiction Genres */}
                 <div className="space-y-2">
                   <CheckboxFilter
                     id="fantasy"
@@ -334,7 +329,6 @@ export default function Books() {
                   />
                 </div>
                 
-                {/* Non-Fiction Genres */}
                 <div className="space-y-2">
                   <CheckboxFilter
                     id="biography-memoir"
@@ -394,7 +388,6 @@ export default function Books() {
               </div>
             </div>
             
-            {/* Buttons */}
             <div className="col-span-2 flex justify-center gap-4 mt-4">
               <Button 
                 text="Reset Filter"
@@ -420,7 +413,6 @@ export default function Books() {
               />
             </div>
             
-            {/* Filter count indicator */}
             {activeFilterCount > 0 && (
               <div className="col-span-2 text-center mt-2 text-sm text-charcoal-gray-4">
                 {activeFilterCount} filter{activeFilterCount !== 1 ? 's' : ''} selected
@@ -429,14 +421,12 @@ export default function Books() {
           </div>
         </aside>
 
-        {/* Main content */}
         <main className="w-full md:w-2/3">
           <SearchBar
             onSearch={setSearchQuery}
             placeholder="Search by title or author..."
           />
           
-          {/* Applied filters indicator */}
           {filterApplied && activeFilterCount > 0 && (
             <div className="mt-4 flex justify-between items-center bg-warm-sand-2 p-3 rounded-lg">
               <div>

@@ -1,6 +1,6 @@
-import { useState } from 'react';
+import { useState,useEffect } from 'react';
 import { Star, ChevronDown } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import SearchBar from '../components/SearchBar';
 
 export default function Reviews() {
@@ -42,7 +42,6 @@ export default function Reviews() {
     },
   ];
 
-  // Flatten reviews for easier display
   const allReviews = books.flatMap((book) =>
     book.reviews.map((review) => ({
       ...review,
@@ -54,7 +53,6 @@ export default function Reviews() {
     }))
   );
 
-  // Filter reviews
   const filteredReviews = allReviews.filter(
     (review) =>
       review.bookTitle.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -62,20 +60,30 @@ export default function Reviews() {
       review.text.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  // Sort reviews
   const sortedReviews = [...filteredReviews].sort((a, b) => {
     return sortOption === 'newest'
       ? new Date(b.date) - new Date(a.date)
       : new Date(a.date) - new Date(b.date);
   });
+  const navigate = useNavigate();
+
+useEffect(() => {
+  if (sortedReviews.length === 0 && searchQuery !== '') {
+    const timeout = setTimeout(() => {
+      navigate('/noreview');
+    }, 100); 
+
+    return () => clearTimeout(timeout);
+  }
+}, [sortedReviews, searchQuery, navigate]);
+
 
   return (
     <div className="container mx-auto py-24 max-w-6xl space-y-12min w-full ">
-      {/* Header and Search */}
       <div className="flex flex-col items-center gap-4">
         <h1 className="text-4xl font-bold text-center">Reviewed Book</h1>
 
-        <div className="w-full sm:w-2/3 pt-4 text-latte-cream-10">
+        <div className="w-full sm:w-2/3 pt-4 ">
           <SearchBar
             onSearch={setSearchQuery}
             placeholder="Search books by title, author, or genre…"
@@ -98,7 +106,6 @@ export default function Reviews() {
         </div>
       </div>
 
-      {/* Review List */}
       <div className="space-y-8 w-full sm:w-2/3 mx-auto">
         {sortedReviews.length > 0 ? (
           sortedReviews.map((review, index) => (
@@ -108,7 +115,6 @@ export default function Reviews() {
             >
               <div className="p-6">
                 <div className="flex flex-col md:flex-row gap-6 items-stretch">
-                  {/* Book Cover */}
                   <div className="w-full md:w-1/5 flex justify-center">
                     <img
                       src={review.bookCover}
@@ -117,7 +123,6 @@ export default function Reviews() {
                     />
                   </div>
 
-                  {/* Review Content */}
                   <div className="flex-1">
                     <div className="flex justify-between items-start flex-wrap">
                       <div>
