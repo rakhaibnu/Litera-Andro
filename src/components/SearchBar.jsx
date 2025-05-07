@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 
 export default function SearchBar({ onSearch }) {
   const [query, setQuery] = useState("");
@@ -9,15 +10,21 @@ export default function SearchBar({ onSearch }) {
   };
 
   return (
-    <form onSubmit={handleSearch} className="flex items-center gap-2 mb-4 font-lato">
-      <input 
-        type="text" 
-        value={query} 
-        onChange={(e) => setQuery(e.target.value)} 
-        className="p-2 border rounded-md w-full" 
-        placeholder="Search books by title, author, or genre..." 
-      />
-      <button type="submit" className="bg-dark text-primary px-5 py-2 rounded-full hover:bg-light hover:text-black transition duration-300">Search</button>
+    <form onSubmit={handleSearch} className="flex items-center gap-2 mb-4 font-lato ">
+      <div className="w-full flex items-center relative"> 
+        <input 
+          type="text" 
+          value={query} 
+          onChange={(e) => setQuery(e.target.value)} 
+          className="px-6 py-3 pr-12 border  rounded-full w-full" 
+          placeholder="Search books by title, author, or genre..." 
+        />
+        <MagnifyingGlassIcon 
+          className="h-6 w-6 text-gray-500  cursor-pointer absolute right-4 top-1/2 transform -translate-y-1/2"
+          aria-hidden="true" 
+          onClick={() => handleSearch(query)}
+        />
+      </div>
     </form>
   );
 }

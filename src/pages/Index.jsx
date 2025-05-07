@@ -1,5 +1,4 @@
 import BookCard from "../components/BookCard";
-import SearchBar from "../components/SearchBar";
 import { CircleChevronRight } from "lucide-react";
 import { CircleChevronLeft } from "lucide-react";
 import Hero from "../assets/hero1.svg";
@@ -15,14 +14,14 @@ export default function Home() {
     {
       id: 2,
       title: "Atomic Habits",
-      author: "James Clea",
+      author: "James Clear",
       cover: "https://via.placeholder.com/150",
     },
   ];
 
   return (
     <main className="grow w-full">
-      <div className="flex items-center bg-hero justify-between px-15 shadow-lg py-5">
+      <div className="flex items-center bg-hero pt-32 justify-between px-15 shadow-lg py-5">
         <div className="flex-col font-merriweather ">
           <h1 className="text-5xl">
             Find Your Next Great Read With Trusted Reviews!
