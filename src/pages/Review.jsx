@@ -107,13 +107,13 @@ export default function Reviews() {
               className="bg-white rounded-lg shadow-md overflow-hidden"
             >
               <div className="p-6">
-                <div className="flex flex-col md:flex-row gap-6">
+                <div className="flex flex-col md:flex-row gap-6 items-stretch">
                   {/* Book Cover */}
                   <div className="w-full md:w-1/5 flex justify-center">
                     <img
                       src={review.bookCover}
                       alt={review.bookTitle}
-                      className="h-48 object-cover rounded-lg shadow"
+                      className="h-full max-h-64 w-auto object-contain rounded-lg shadow self-end"
                     />
                   </div>
 
@@ -126,7 +126,7 @@ export default function Reviews() {
                         </h2>
                         <p className="text-gray-600">by {review.bookAuthor}</p>
                       </div>
-                      <div className="flex items-center space-x-1">
+                      <div className="w-full md:w-1.5 flex items-center space-x-1 h-full">
                         {[...Array(5)].map((_, i) => (
                           <Star
                             key={i}
@@ -144,7 +144,7 @@ export default function Reviews() {
                       <p className="text-gray-700 italic">"{review.text}"</p>
                     </div>
 
-                    <div className="mt-6 flex justify-between items-center flex-wrap">
+                    <div className="mt-6 flex flex-col items-start sm:items-end sm:flex-row justify-between gap-2 pt-4"> 
                       <div>
                         <p className="font-medium">{review.user}</p>
                         <p className="text-sm text-gray-500">
@@ -157,7 +157,7 @@ export default function Reviews() {
                       </div>
                       <Link
                         to={`/book/${review.bookId}`}
-                        className="bg-[#C6A986] hover:bg-[#a78e6d] text-white text-sm px-4 py-1 rounded-full transition duration-300"
+                        className="bg-[#C6A986] hover:bg-[#a78e6d] text-white text-sm px-4 py-1 rounded-full transition duration-300 "
                       >
                         see review
                       </Link>
