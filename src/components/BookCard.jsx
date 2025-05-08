@@ -5,7 +5,7 @@ export default function BookCard({ book }) {
     <div className="group relative overflow-hidden bg-white px-6 pt-6 pb-4 shadow-xl ring-1 ring-gray-900/5 rounded-lg font-lato transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl">
       <span className="absolute top-6 left-6 z-0 h-20 w-20 rounded-full bg-hero transition-all duration-300 group-hover:scale-[10] group-hover:opacity-100 opacity-0"></span>
 
-      <div className="relative z-10">
+      <div className="relative ">
         <img
           src={book.cover}
           alt={book.title}
