@@ -23,7 +23,7 @@ export default function Profile() {
                         <UserRound /> Profile
                       </span>
                     }
-                    className="w-full border border-[#C6A986] rounded-[8px] py-2 px-4 bg-[#f7ede2] text-black font-normal justify-start text-left"
+                    className="w-full border border-[#C6A986] rounded-[8px] py-2 px-4 bg-white text-black font-normal justify-start text-left hover:bg-[#f7ede2] transition"
                   />
                 </Link>
               </li>
@@ -35,7 +35,7 @@ export default function Profile() {
                         <Star /> Favourite
                       </span>
                     }
-                    className="w-full border border-[#C6A986] rounded-[8px] py-2 px-4 bg-white text-black font-normal justify-start text-left hover:bg-[#f7ede2] transition"
+                    className="w-full border border-[#C6A986] rounded-[8px] py-2 px-4 bg-[#f7ede2] text-black font-normal justify-start text-left"
                   />
                 </Link>
               </li>
@@ -66,7 +66,7 @@ export default function Profile() {
         <div className="flex flex-col border border-[#C6A986] m-10 p-10 mt-10 w-[730px] rounded-[20px] min-h-[650px] bg-white">
           <div className="flex flex-col items-center mb-8">
             <h3 className="font-merriweather text-5xl font-bold mb-4">
-              Profile
+              Favourite
             </h3>
             <CircleUser size={120} className="mx-auto" />
           </div>

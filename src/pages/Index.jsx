@@ -23,7 +23,7 @@ export default function Home() {
 
   return (
     <main className="grow w-full">
-      <div className="flex items-center bg-hero pt-32 justify-between px-15 shadow-lg py-5">
+      <div className="flex items-center bg-sage-green-1 pt-32 justify-between px-15 shadow-lg py-5">
         <div className="flex-col font-merriweather ">
           <h1 className="text-5xl">
             Find Your Next Great Read With Trusted Reviews!
