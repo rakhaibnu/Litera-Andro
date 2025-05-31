@@ -1,8 +1,9 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import Litera from "../assets/Litera.png";
 import Sign_in from "../assets/sign_in.png";
 import { ArrowLeftIcon } from "@heroicons/react/20/solid";
+import { useNavigate } from "react-router-dom";
 import Button from "../components/Button";
 import {FormField} from "../components/FormField";
 
@@ -15,6 +16,7 @@ export default function SignIn() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    // Handle login logic here
     console.log({ email, password });
   };
 
@@ -84,7 +86,7 @@ export default function SignIn() {
             <Link 
               to="/signup"
               className="no-underline font-medium text-warm-sand-5 hover:text-warm-sand-7 transition-colors duration-300"
-> 
+            > 
               Sign Up
             </Link>
           </div>
