@@ -1,29 +1,38 @@
 import { Star, KeyRound, UserRound, LogOut, CircleUser } from 'lucide-react';
-import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import Button from '../components/Button';
 import { FormField } from '../components/FormField';
+import NoProfile from '../assets/noProfile.png';
+import CatProfile from '../assets/catProfile.png';
+import PandaProfile from '../assets/pandaProfile.png';
+import OwlProfile from '../assets/owlProfile.png';
+import SharkProfile from '../assets/sharkProfile.png';
 
-export default function Profile() {
+export default function EditProfile() {
   const [name, setName] = useState('Salman Ibnu');
   const [email, setEmail] = useState('salak@gmail.com');
-  const [savedProfile, setSavedProfile] = useState(null);
+  const [selectedProfile, setSelectedProfile] = useState(() => {
+    return localStorage.getItem('userProfile') || null;
+  });
+  const navigate = useNavigate();
 
-  useEffect(() => {
-    const userProfile = localStorage.getItem('userProfile');
-    const userName = localStorage.getItem('userName');
-    const userEmail = localStorage.getItem('userEmail');
+  const profileImages = [
+    { src: NoProfile, alt: 'No Login' },
+    { src: CatProfile, alt: 'Cat Profile' },
+    { src: PandaProfile, alt: 'Panda Profile' },
+    { src: OwlProfile, alt: 'Owl Profile' },
+    { src: SharkProfile, alt: 'Shark Profile' },
+  ];
 
-    if (userProfile) {
-      setSavedProfile(userProfile);
+  const handleSaveChanges = () => {
+    if (selectedProfile) {
+      localStorage.setItem('userProfile', selectedProfile);
+      localStorage.setItem('userName', name);
+      localStorage.setItem('userEmail', email);
     }
-    if (userName) {
-      setName(userName);
-    }
-    if (userEmail) {
-      setEmail(userEmail);
-    }
-  }, []);
+    navigate('/profile');
+  };
 
   return (
     <section className="w-full min-h-screen bg-white">
@@ -79,18 +88,36 @@ export default function Profile() {
         </div>
 
         {/* Main Content */}
-        <div className="flex flex-col border border-[#C6A986] m-10 p-10 mt-10 w-[730px] rounded-[20px] min-h-[650px] bg-white">
+        <div className="flex flex-col border border-[#C6A986] m-10 p-10 mt-10 w-[730px] rounded-[20px] min-h-[747px] bg-white">
           <div className="flex flex-col items-center mb-8">
-            <h3 className="font-merriweather text-5xl font-bold mb-4">Profile</h3>
-            {savedProfile ? (
+            <h3 className="font-merriweather text-5xl font-bold mb-4">
+              Profile
+            </h3>
+            {selectedProfile ? (
               <img
-                src={savedProfile}
-                alt="Profile"
+                src={selectedProfile}
+                alt="Selected Profile"
                 className="w-32 h-32 rounded-full mx-auto"
               />
             ) : (
               <CircleUser size={120} className="mx-auto" />
             )}
+          </div>
+          <div className="flex flex-col">
+            <p className="mb-4">Photo Profile</p>
+            <div className="flex mb-4">
+              {profileImages.map((profile, index) => (
+                <img
+                  key={index}
+                  src={profile.src}
+                  alt={profile.alt}
+                  className={`w-16 h-16 rounded-full mx-2 cursor-pointer hover:ring-2 hover:ring-[#C6A986] transition ${
+                    selectedProfile === profile.src ? 'ring-2 ring-[#C6A986]' : ''
+                  }`}
+                  onClick={() => setSelectedProfile(profile.src)}
+                />
+              ))}
+            </div>
           </div>
           <form className="w-full max-w-2xl mx-auto flex flex-col gap-4">
             <FormField
@@ -100,7 +127,6 @@ export default function Profile() {
               placeholder="Enter your name"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              disabled
             />
             <FormField
               id="email"
@@ -109,26 +135,13 @@ export default function Profile() {
               placeholder="Enter your email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              disabled
             />
-            <Link to="/editprofile">
-              <Button
-                text="Edit Profile"
-                className="w-fit border border-black bg-white text-black rounded-[8px] px-6 py-2 mt-2 hover:bg-latte-cream-6 transition"
-              />
-            </Link>
+            <Button
+              text="Save Changes"
+              onClick={handleSaveChanges}
+              className="w-fit border border-black bg-white text-black rounded-[8px] px-6 py-2 mt-2 hover:bg-latte-cream-7 transition"
+            />
           </form>
-          <hr className="my-8 border-gray-400" />
-          <div className="flex gap-8 justify-center mt-4">
-            <div className="flex flex-col items-center border border-gray-400 rounded-[12px] px-10 py-6 bg-white w-[220px]">
-              <span className="text-3xl font-bold">3</span>
-              <span className="text-lg text-gray-700 mt-1">Reviewed Book</span>
-            </div>
-            <div className="flex flex-col items-center border border-gray-400 rounded-[12px] px-10 py-6 bg-white w-[220px]">
-              <span className="text-3xl font-bold">5</span>
-              <span className="text-lg text-gray-700 mt-1">Favourite Book</span>
-            </div>
-          </div>
         </div>
       </div>
     </section>

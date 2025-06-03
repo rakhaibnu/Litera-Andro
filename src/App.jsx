@@ -11,6 +11,7 @@ import NoLogin from './pages/NoLogin';
 import Profile from './pages/profile';
 import Security from './pages/Security';
 import Favorites from './pages/Favorites';
+import Editprofile from './pages/Editprofile';
 
 export default function App() {
   return (
@@ -23,9 +24,10 @@ export default function App() {
           <Route path="book/:id" element={<BookDetail />} />
           <Route path="noreview" element={<NoReview />} />
           <Route path="nologin" element={<NoLogin />} />
-          <Route path='profile' element={<Profile />} />
-          <Route path='security' element={<Security />} />
-          <Route path='favorites' element={<Favorites />} />
+          <Route path="profile" element={<Profile />} />
+          <Route path="security" element={<Security />} />
+          <Route path="favorites" element={<Favorites />} />
+          <Route path="editprofile" element={<Editprofile />} />
         </Route>
         <Route path="signin" element={<Signin />} />
         <Route path="signup" element={<Signup />} />

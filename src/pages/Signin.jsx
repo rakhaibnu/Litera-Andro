@@ -71,10 +71,12 @@ export default function SignIn() {
               handleEyeMouseEnter={() => setIsEyeHovered(true)}
               handleEyeMouseLeave={() => setIsEyeHovered(false)}
             />
+            <Link to="/profile">
             <Button 
               text={"Sign in"}
               className="w-full flex justify-center py-2 mt-28 px-4 border border-transparent rounded-2xl shadow-sm text-lg font-medium text-deep-mocha-brown-3 bg-warm-sand-4 hover:bg-light transition hover:text-deep-mocha-brown-7"
             />
+            </Link>    
           </form>
           <div className="mt-6">
             <div className="w-full border-t border-gray-300"></div>

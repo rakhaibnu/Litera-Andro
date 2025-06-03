@@ -45,7 +45,7 @@ export default function Navbar() {
           <Link to="/Books" className="hover:text-gray-600">Books</Link>
           <Link to="/Review" className="hover:text-gray-600">Reviews</Link>
           <Link 
-            to="/Profile" 
+            to="/signin" 
             className="bg-light px-4 py-2 rounded-full border-0 hover:bg-dark hover:text-white transition duration-300"
           >
             Login
