@@ -1,10 +1,10 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Litera from '../assets/Litera.png';
 import Sign_in from '../assets/SignUp.png';
-
 import Button from '../components/Button';
 import { FormField } from '../components/FormField';
+import axios from 'axios';
 
 export default function SignUp() {
   const [name, setName] = useState('');
@@ -12,11 +12,52 @@ export default function SignUp() {
   const [password, setPassword] = useState('');
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [isEyeHovered, setIsEyeHovered] = useState(false);
+  const [error, setError] = useState('');
+  const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(name, email, password);
-  };
+    setError('');
+
+    try {
+      // Create user data object instead of FormData
+      const userData = {
+        username: name,
+        email: email,
+        password: password
+      };
+
+      const response = await axios.post(
+        `${import.meta.env.VITE_API_URL}/auth/register`,
+        userData,
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+
+      if (response.data.success) {
+        // Show success message
+        alert('Registration successful!');
+        // Navigate to signin page
+        navigate('/Signin');
+      }
+    } catch (err) {
+      // Handle specific error cases
+      if (err.response) {
+        // Server responded with error
+        setError(err.response.data.message || 'Registration failed');
+      } else if (err.request) {
+        // Request made but no response
+        setError('Network error. Please try again.');
+      } else {
+        // Other errors
+        setError('An error occurred. Please try again.');
+      }
+      console.error('Registration error:', err);
+    }
+};
 
   return (
     <div className="min-h-screen min-w-full flex color-white">
@@ -38,6 +79,11 @@ export default function SignUp() {
             className="font-lato space-y-3 w-full max-w-lg"
             onSubmit={handleSubmit}
           >
+            {error && (
+              <div className="text-red-500 text-sm mb-4 text-center">
+                {error}
+              </div>
+            )}
             <FormField
               id="name"
               label="Name"
@@ -72,12 +118,12 @@ export default function SignUp() {
               handleEyeMouseEnter={() => setIsEyeHovered(true)}
               handleEyeMouseLeave={() => setIsEyeHovered(false)}
             />
-            <Link to="/profile">
-              <Button
-                text={'Sign Up'}
-                className="w-full flex justify-center py-2 mt-28 px-4 border border-transparent rounded-2xl shadow-sm text-lg font-medium text-deep-mocha-brown-3 bg-warm-sand-4 hover:bg-light transition hover:text-deep-mocha-brown-7"
-              />
-            </Link>
+
+            <Button
+              type="submit"
+              text={'Sign Up'}
+              className="w-full flex justify-center py-2 mt-28 px-4 border border-transparent rounded-2xl shadow-sm text-lg font-medium text-deep-mocha-brown-3 bg-warm-sand-4 hover:bg-light transition hover:text-deep-mocha-brown-7"
+            />
           </form>
           <div className="mt-6">
             <div className="w-full border-t border-gray-300"></div>
