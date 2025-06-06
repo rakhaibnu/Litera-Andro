@@ -31,18 +31,7 @@ export default function Security() {
                   />
                 </Link>
               </li>
-              <li className="mb-2">
-                <Link to="/favorites">
-                  <Button
-                    text={
-                      <span className="flex items-center gap-2 text-lg justify-center">
-                        <Star /> Favourite
-                      </span>
-                    }
-                    className="w-full border border-[#C6A986] rounded-[8px] py-2 px-4 bg-white text-black font-normal justify-start text-left hover:bg-[#f7ede2] transition"
-                  />
-                </Link>
-              </li>
+
               <li className="mb-2">
                 <Link to="/security">
                   <Button

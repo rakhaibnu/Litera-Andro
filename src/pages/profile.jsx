@@ -1,29 +1,78 @@
-import { Star, KeyRound, UserRound, LogOut, CircleUser } from 'lucide-react';
+import { KeyRound, UserRound, LogOut, CircleUser } from 'lucide-react';
 import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Button from '../components/Button';
 import { FormField } from '../components/FormField';
+import axios from 'axios';
 
 export default function Profile() {
-  const [name, setName] = useState('Salman Ibnu');
-  const [email, setEmail] = useState('salak@gmail.com');
-  const [savedProfile, setSavedProfile] = useState(null);
+  const [userData, setUserData] = useState({
+    username: '',
+    email: '',
+    image: null,
+    reviewCount: 0,
+    favoriteCount: 0
+  });
+  const navigate = useNavigate();
 
   useEffect(() => {
-    const userProfile = localStorage.getItem('userProfile');
-    const userName = localStorage.getItem('userName');
-    const userEmail = localStorage.getItem('userEmail');
+    const fetchUserData = async () => {
+      try {
+        const token = localStorage.getItem('token');
+        const user = JSON.parse(localStorage.getItem('user'));
 
-    if (userProfile) {
-      setSavedProfile(userProfile);
+        if (!token || !user) {
+          navigate('/signin');
+          return;
+        }
+
+        const response = await axios.get(
+          `${import.meta.env.VITE_API_URL}/user/${user.id}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        if (response.data.success) {
+          setUserData({
+            ...response.data.data,
+            image: response.data.data.image || localStorage.getItem('userProfile')
+          });
+        }
+      } catch (error) {
+        console.error('Error fetching user data:', error);
+        if (error.response?.status === 401) {
+          localStorage.clear();
+          navigate('/signin');
+        }
+      }
+    };
+
+    fetchUserData();
+  }, [navigate]);
+
+  const handleLogout = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      await axios.post(
+        `${import.meta.env.VITE_API_URL}/auth/logout`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      localStorage.clear();
+      navigate('/signin');
+    } catch (error) {
+      console.error('Logout error:', error);
+      localStorage.clear();
+      navigate('/signin');
     }
-    if (userName) {
-      setName(userName);
-    }
-    if (userEmail) {
-      setEmail(userEmail);
-    }
-  }, []);
+  };
 
   return (
     <section className="w-full min-h-screen bg-white">
@@ -43,18 +92,6 @@ export default function Profile() {
                 />
               </li>
               <li className="mb-2">
-                <Link to="/favorites">
-                  <Button
-                    text={
-                      <span className="flex items-center gap-2 text-lg">
-                        <Star /> Favourite
-                      </span>
-                    }
-                    className="w-full border border-[#C6A986] rounded-[8px] py-2 px-4 bg-white text-black font-normal justify-start text-left hover:bg-[#f7ede2] transition"
-                  />
-                </Link>
-              </li>
-              <li className="mb-2">
                 <Link to="/security">
                   <Button
                     text={
@@ -69,6 +106,7 @@ export default function Profile() {
             </ul>
           </div>
           <Button
+            onClick={handleLogout}
             text={
               <span className="flex items-center gap-2 text-lg">
                 <LogOut /> Logout
@@ -81,25 +119,26 @@ export default function Profile() {
         {/* Main Content */}
         <div className="flex flex-col border border-[#C6A986] m-10 p-10 mt-10 w-[730px] rounded-[20px] min-h-[650px] bg-white">
           <div className="flex flex-col items-center mb-8">
-            <h3 className="font-merriweather text-5xl font-bold mb-4">Profile</h3>
-            {savedProfile ? (
+            <h3 className="font-merriweather text-5xl font-bold mb-4">
+              Profile
+            </h3>
+            {userData.image ? (
               <img
-                src={savedProfile}
+                src={userData.image}
                 alt="Profile"
-                className="w-32 h-32 rounded-full mx-auto"
+                className="w-32 h-32 rounded-full mx-auto object-cover"
               />
             ) : (
-              <CircleUser size={120} className="mx-auto" />
+              <CircleUser size={120} className="mx-auto text-gray-400" />
             )}
           </div>
           <form className="w-full max-w-2xl mx-auto flex flex-col gap-4">
             <FormField
-              id="name"
-              label="Name"
+              id="username"
+              label="Username"
               type="text"
-              placeholder="Enter your name"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
+              placeholder="Enter your username"
+              value={userData.username}
               disabled
             />
             <FormField
@@ -107,8 +146,7 @@ export default function Profile() {
               label="Email"
               type="email"
               placeholder="Enter your email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              value={userData.email}
               disabled
             />
             <Link to="/editprofile">
@@ -121,11 +159,11 @@ export default function Profile() {
           <hr className="my-8 border-gray-400" />
           <div className="flex gap-8 justify-center mt-4">
             <div className="flex flex-col items-center border border-gray-400 rounded-[12px] px-10 py-6 bg-white w-[220px]">
-              <span className="text-3xl font-bold">3</span>
+              <span className="text-3xl font-bold">{userData.reviewCount}</span>
               <span className="text-lg text-gray-700 mt-1">Reviewed Book</span>
             </div>
             <div className="flex flex-col items-center border border-gray-400 rounded-[12px] px-10 py-6 bg-white w-[220px]">
-              <span className="text-3xl font-bold">5</span>
+              <span className="text-3xl font-bold">{userData.favoriteCount}</span>
               <span className="text-lg text-gray-700 mt-1">Favourite Book</span>
             </div>
           </div>

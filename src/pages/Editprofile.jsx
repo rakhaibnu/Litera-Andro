@@ -1,5 +1,5 @@
-import { Star, KeyRound, UserRound, LogOut, CircleUser } from 'lucide-react';
-import { useState } from 'react';
+import { KeyRound, UserRound, LogOut, CircleUser } from 'lucide-react';
+import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import Button from '../components/Button';
 import { FormField } from '../components/FormField';
@@ -8,14 +8,120 @@ import CatProfile from '../assets/catProfile.png';
 import PandaProfile from '../assets/pandaProfile.png';
 import OwlProfile from '../assets/owlProfile.png';
 import SharkProfile from '../assets/sharkProfile.png';
+import axios from 'axios';
 
 export default function EditProfile() {
-  const [name, setName] = useState('Salman Ibnu');
-  const [email, setEmail] = useState('salak@gmail.com');
+  const [userData, setUserData] = useState({
+    username: '',
+    email: '',
+    image: null
+  });
   const [selectedProfile, setSelectedProfile] = useState(() => {
     return localStorage.getItem('userProfile') || null;
   });
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const token = localStorage.getItem('token');
+        const user = JSON.parse(localStorage.getItem('user'));
+
+        if (!token || !user) {
+          navigate('/signin');
+          return;
+        }
+
+        const response = await axios.get(
+          `${import.meta.env.VITE_API_URL}/user/${user.id}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        if (response.data.success) {
+          setUserData({
+            username: response.data.data.username,
+            email: response.data.data.email,
+            image: response.data.data.image || localStorage.getItem('userProfile')
+          });
+          setSelectedProfile(response.data.data.image || localStorage.getItem('userProfile'));
+        }
+      } catch (error) {
+        console.error('Error fetching user data:', error);
+        if (error.response?.status === 401) {
+          localStorage.clear();
+          navigate('/signin');
+        }
+      }
+    };
+
+    fetchUserData();
+  }, [navigate]);
+
+  const handleSaveChanges = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      const user = JSON.parse(localStorage.getItem('user'));
+
+      const formData = new FormData();
+      formData.append('username', userData.username);
+      formData.append('email', userData.email);
+
+      if (selectedProfile) {
+        const response = await fetch(selectedProfile);
+        const blob = await response.blob();
+        formData.append('image', blob, 'profile.png');
+      }
+
+      const response = await axios.put(
+        `${import.meta.env.VITE_API_URL}/user/${user.id}`,
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'multipart/form-data',
+          },
+        }
+      );
+
+      if (response.data.success) {
+        localStorage.setItem('user', JSON.stringify({
+          ...user,
+          username: userData.username,
+          email: userData.email,
+          image: selectedProfile
+        }));
+        localStorage.setItem('userProfile', selectedProfile);
+        navigate('/profile');
+      }
+    } catch (error) {
+      console.error('Update profile error:', error);
+    }
+  };
+
+  const handleLogout = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      await axios.post(
+        `${import.meta.env.VITE_API_URL}/auth/logout`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      localStorage.clear();
+      navigate('/signin');
+    } catch (error) {
+      console.error('Logout error:', error);
+      localStorage.clear();
+      navigate('/signin');
+    }
+  };
 
   const profileImages = [
     { src: NoProfile, alt: 'No Login' },
@@ -25,14 +131,7 @@ export default function EditProfile() {
     { src: SharkProfile, alt: 'Shark Profile' },
   ];
 
-  const handleSaveChanges = () => {
-    if (selectedProfile) {
-      localStorage.setItem('userProfile', selectedProfile);
-      localStorage.setItem('userName', name);
-      localStorage.setItem('userEmail', email);
-    }
-    navigate('/profile');
-  };
+  
 
   return (
     <section className="w-full min-h-screen bg-white">
@@ -51,18 +150,7 @@ export default function EditProfile() {
                   className="w-full border border-[#C6A986] rounded-[8px] py-2 px-4 bg-[#f7ede2] text-black font-normal justify-start text-left"
                 />
               </li>
-              <li className="mb-2">
-                <Link to="/favorites">
-                  <Button
-                    text={
-                      <span className="flex items-center gap-2 text-lg">
-                        <Star /> Favourite
-                      </span>
-                    }
-                    className="w-full border border-[#C6A986] rounded-[8px] py-2 px-4 bg-white text-black font-normal justify-start text-left hover:bg-[#f7ede2] transition"
-                  />
-                </Link>
-              </li>
+              
               <li className="mb-2">
                 <Link to="/security">
                   <Button
@@ -78,9 +166,10 @@ export default function EditProfile() {
             </ul>
           </div>
           <Button
+            onClick={handleLogout}
             text={
               <span className="flex items-center gap-2 text-lg">
-                <LogOut /> Logout
+                Logout
               </span>
             }
             className="w-full mt-10 bg-[#D97D74] hover:bg-[#b85e56] text-white border-none rounded-[8px] py-2 px-4 justify-center"
@@ -120,28 +209,28 @@ export default function EditProfile() {
             </div>
           </div>
           <form className="w-full max-w-2xl mx-auto flex flex-col gap-4">
-            <FormField
-              id="name"
-              label="Name"
-              type="text"
-              placeholder="Enter your name"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-            />
-            <FormField
-              id="email"
-              label="Email"
-              type="email"
-              placeholder="Enter your email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
-            <Button
-              text="Save Changes"
-              onClick={handleSaveChanges}
-              className="w-fit border border-black bg-white text-black rounded-[8px] px-6 py-2 mt-2 hover:bg-latte-cream-7 transition"
-            />
-          </form>
+          <FormField
+            id="username"
+            label="Username"
+            type="text"
+            placeholder="Enter your username"
+            value={userData.username}
+            onChange={(e) => setUserData(prev => ({...prev, username: e.target.value}))}
+          />
+          <FormField
+            id="email"
+            label="Email"
+            type="email"
+            placeholder="Enter your email"
+            value={userData.email}
+            onChange={(e) => setUserData(prev => ({...prev, email: e.target.value}))}
+          />
+          <Button
+            text="Save Changes"
+            onClick={handleSaveChanges}
+            className="w-fit border border-black bg-white text-black rounded-[8px] px-6 py-2 mt-2 hover:bg-latte-cream-7 transition"
+          />
+        </form>
         </div>
       </div>
     </section>

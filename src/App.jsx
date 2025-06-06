@@ -8,9 +8,8 @@ import Index from './pages/Index';
 import Review from './pages/Review';
 import NoReview from './pages/NoReview';
 import NoLogin from './pages/NoLogin';
-import Profile from './pages/profile';
+import Profile from './pages/Profile';
 import Security from './pages/Security';
-import Favorites from './pages/Favorites';
 import Editprofile from './pages/Editprofile';
 
 export default function App() {
@@ -26,7 +25,6 @@ export default function App() {
           <Route path="nologin" element={<NoLogin />} />
           <Route path="profile" element={<Profile />} />
           <Route path="security" element={<Security />} />
-          <Route path="favorites" element={<Favorites />} />
           <Route path="editprofile" element={<Editprofile />} />
         </Route>
         <Route path="signin" element={<Signin />} />
