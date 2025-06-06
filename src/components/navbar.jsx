@@ -43,7 +43,7 @@ export default function Navbar() {
         <div className="flex items-center text-black space-x-6 font-lato">
           <Link to="/" className="hover:text-gray-600">Home</Link>
           <Link to="/Books" className="hover:text-gray-600">Books</Link>
-          <Link to="/Review" className="hover:text-gray-600">Reviews</Link>
+          <Link to="/NoLogin" className="hover:text-gray-600">Reviews</Link>
           <Link 
             to="/signin" 
             className="bg-light px-4 py-2 rounded-full border-0 hover:bg-dark hover:text-white transition duration-300"
