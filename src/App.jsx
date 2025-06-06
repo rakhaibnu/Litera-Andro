@@ -8,7 +8,7 @@ import Index from './pages/Index';
 import Review from './pages/Review';
 import NoReview from './pages/NoReview';
 import NoLogin from './pages/NoLogin';
-import Profile from './pages/profile';
+import Profile from './pages/Profile';
 import Security from './pages/Security';
 import Editprofile from './pages/Editprofile';
 
