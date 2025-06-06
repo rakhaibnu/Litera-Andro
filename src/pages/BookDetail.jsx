@@ -12,9 +12,57 @@ export default function BookDetail() {
   const [reviewText, setReviewText] = useState('');
   const [isFavourite, setIsFavourite] = useState(false);
   const [reviews, setReviews] = useState([]);
+  const [editingReview, setEditingReview] = useState(null);
+  const [editText, setEditText] = useState('');
 
   const token = localStorage.getItem('token');
   const user = JSON.parse(localStorage.getItem('user'));
+
+  const handleEditReview = (review) => {
+    setEditingReview(review.id);
+    setEditText(review.text);
+  };
+
+  const handleUpdateReview = async (reviewId) => {
+    if (!token || !user) {
+      navigate('/signin');
+      return;
+    }
+
+    try {
+      const response = await axios.put(
+        `${import.meta.env.VITE_API_URL}/reviews/${reviewId}`,
+        {
+          comment: editText.trim(),
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+
+      if (response.data.success) {
+        setReviews((prevReviews) =>
+          prevReviews.map((review) =>
+            review.id === reviewId
+              ? { ...review, text: editText.trim() }
+              : review
+          )
+        );
+        setEditingReview(null);
+        setEditText('');
+      }
+    } catch (err) {
+      console.error('Failed to update review:', err);
+      if (err.response?.status === 401) {
+        navigate('/signin');
+      } else {
+        alert(err.response?.data?.message || 'Failed to update review');
+      }
+    }
+  };
 
   const normalizeReview = (review) => ({
     id: review.id,
@@ -356,15 +404,48 @@ export default function BookDetail() {
                         </p>
                       </div>
                       {user?.id === review.userId && (
-                        <button
-                          onClick={() => handleDeleteReview(review.id)}
-                          className="text-red-600 hover:text-red-500 transition-colors"
-                        >
-                          Delete
-                        </button>
+                        <div className="flex gap-2">
+                          {editingReview === review.id ? (
+                            <>
+                              <button
+                                onClick={() => handleUpdateReview(review.id)}
+                                className="text-green-600 hover:text-green-500 transition-colors font-medium"
+                              >
+                                Save
+                              </button>
+                            </>
+                          ) : (
+                            <>
+                              <button
+                                onClick={() => handleEditReview(review)}
+                                className="text-blue-600 hover:text-blue-500 transition-colors"
+                              >
+                                Edit
+                              </button>
+                              <button
+                                onClick={() => handleDeleteReview(review.id)}
+                                className="text-red-600 hover:text-red-500 transition-colors"
+                              >
+                                Delete
+                              </button>
+                            </>
+                          )}
+                        </div>
                       )}
                     </div>
-                    <p className="text-gray-700">{review.text}</p>
+                    {editingReview === review.id ? (
+                      <div className="mt-2">
+                        <textarea
+                          className="w-full border rounded-lg p-2"
+                          value={editText}
+                          onChange={(e) => setEditText(e.target.value)}
+                          rows={3}
+                          placeholder="Edit your review..."
+                        />
+                      </div>
+                    ) : (
+                      <p className="text-gray-700">{review.text}</p>
+                    )}
                   </div>
                 ))}
               </div>
