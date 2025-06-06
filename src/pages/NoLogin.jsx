@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 
 export default function NoLogin() {
     return (
-        <div className="flex flex-col w-full items-center justify-center min-h-screen bg-gray-100 font-merriweather gap-4 py-20">
+        <div className="flex flex-col w-full items-center justify-center min-h-screen bg-white font-merriweather gap-4 py-20">
         <h1 className="text-5xl px-80 text-center">Log in to see full reviews and participate!</h1>
         <img src={ImageNoLogin} alt="No login" className="w-2xs pt-4" />
         

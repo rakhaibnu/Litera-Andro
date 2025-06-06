@@ -86,9 +86,8 @@ export default function BookDetail() {
   };
 
   const handleAddReview = () => {
-  navigate("/Signin");
+    navigate('/Signin');
   };
-
 
   if (loading) {
     return (
@@ -109,9 +108,17 @@ export default function BookDetail() {
         <div className="flex flex-col md:flex-row gap-8">
           <div className="w-full md:w-1/3 flex justify-center">
             <img
-              src={'https://via.placeholder.com/300x450?text=Not+Found'}
-              alt="Book not found"
-              className="w-full max-w-xs rounded-lg shadow-lg"
+              src={
+                book.cover ||
+                'https://via.placeholder.com/300x450?text=Not+Found'
+              }
+              onError={(e) => {
+                e.target.onerror = null;
+                e.target.src =
+                  'https://via.placeholder.com/300x450?text=Not+Found';
+              }}
+              alt="Book cover"
+              className="w-full max-w-xs max-h-[400px] md:max-h-[450px] object-cover rounded-lg shadow-lg"
             />
           </div>
           <div className="w-full md:w-2/3">
@@ -131,9 +138,16 @@ export default function BookDetail() {
       <div className="flex flex-col md:flex-row gap-8">
         <div className="w-full md:w-1/3 flex justify-center">
           <img
-            src={book.cover}
-            alt={book.title}
-            className="w-full max-w-xs rounded-lg shadow-lg"
+            src={
+              book.cover || 'https://via.placeholder.com/300x450?text=Not+Found'
+            }
+            onError={(e) => {
+              e.target.onerror = null;
+              e.target.src =
+                'https://via.placeholder.com/300x450?text=Not+Found';
+            }}
+            alt="Book cover"
+            className=" max-w-xs max-h-[300px] object-cover rounded-lg shadow-lg"
           />
         </div>
 
