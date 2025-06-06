@@ -164,7 +164,10 @@ export default function BookDetail() {
               </span>
             ))}
           </div>
-          <p className="text-gray-800 mb-4">{book.description}</p>
+          <div
+            className="text-gray-800 mb-4 prose prose-sm max-w-none"
+            dangerouslySetInnerHTML={{ __html: book.description }}
+          />
 
           <button
             className={`flex items-center gap-2 mb-2 border-2 rounded-full p-2 transition-colors
