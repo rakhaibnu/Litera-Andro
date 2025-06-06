@@ -14,16 +14,50 @@ export default function BookDetail() {
   const [reviews, setReviews] = useState([]);
 
   const token = localStorage.getItem('token');
+  const user = JSON.parse(localStorage.getItem('user'));
 
   const normalizeReview = (review) => ({
-    user:
-      typeof review.user === 'object'
-        ? review.user.name || review.user.username || 'Anonymous'
-        : review.user || 'Anonymous',
+    id: review.id,
+    user: review.username, // Changed from review.user to review.username
     text: review.comment || '',
     date: review.createdAt || new Date().toISOString(),
-    avatar: review.user?.avatar || 'https://i.pravatar.cc/150?img=7',
+    avatar: review.userImage || 'https://i.pravatar.cc/150?img=7',
+    userId: review.userId,
   });
+
+  const handleDeleteReview = async (reviewId) => {
+    if (!token || !user) {
+      navigate('/signin');
+      return;
+    }
+
+    try {
+      const response = await axios.delete(
+        `${import.meta.env.VITE_API_URL}/reviews/${reviewId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+
+      if (response.data.success) {
+        // Remove the deleted review from state
+        setReviews((prevReviews) =>
+          prevReviews.filter((review) => review.id !== reviewId)
+        );
+        alert('Review deleted successfully');
+      }
+    } catch (err) {
+      console.error('Failed to delete review:', err);
+      if (err.response?.status === 401) {
+        navigate('/signin');
+      } else {
+        alert(err.response?.data?.message || 'Failed to delete review');
+      }
+    }
+  };
 
   useEffect(() => {
     const fetchBookDetails = async () => {
@@ -65,11 +99,7 @@ export default function BookDetail() {
         const res = await axios.get(
           `${import.meta.env.VITE_API_URL}/reviews/${id}`
         );
-        const rawData = Array.isArray(res.data)
-          ? res.data
-          : Array.isArray(res.data.reviews)
-          ? res.data.reviews
-          : [];
+        const rawData = res.data.data || [];
 
         setReviews(
           rawData
@@ -118,42 +148,50 @@ export default function BookDetail() {
   };
 
   const handleAddReview = async () => {
-    if (!token) {
-      console.warn('Token tidak ada, redirect ke /Signin');
-      navigate('/Signin');
-      return;
-    }
-
-    if (!reviewText.trim() || reviewText.trim().length < 5) {
-      alert('Review terlalu pendek.');
+    if (!token || !user) {
+      navigate('/signin');
       return;
     }
 
     try {
-      const res = await axios.post(
+      const response = await axios.post(
         `${import.meta.env.VITE_API_URL}/reviews`,
         {
           bookId: id,
           comment: reviewText.trim(),
+          userId: user.id,
         },
         {
           headers: {
             Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json',
           },
         }
       );
 
-      setReviewText('');
-      setReviews((prev) => [
-        normalizeReview(res.data),
-        ...(Array.isArray(prev) ? prev : []),
-      ]);
+      if (response.data.success) {
+        // Add new review with correct user data
+        const newReview = {
+          id: response.data.data.id,
+          userId: user.id,
+          username: user.username, // Use logged-in user's username
+          comment: reviewText.trim(),
+          createdAt: new Date().toISOString(),
+          userImage: user.image,
+        };
+
+        setReviews((prevReviews) => [
+          normalizeReview(newReview),
+          ...prevReviews,
+        ]);
+        setReviewText('');
+      }
     } catch (err) {
       console.error('Gagal menyimpan review:', err);
-      alert(err.response?.data?.message || 'Gagal menyimpan review');
-
       if (err.response?.status === 401) {
-        navigate('/Signin');
+        navigate('/signin');
+      } else {
+        alert(err.response?.data?.message || 'Gagal menyimpan review');
       }
     }
   };
@@ -292,23 +330,29 @@ export default function BookDetail() {
             <div key={idx} className="flex gap-4 items-start mb-8">
               <img
                 src={review.avatar}
-                alt={review.user}
-                className="w-12 h-12 rounded-full border"
+                alt={`${review.user}'s avatar`}
+                className="w-12 h-12 rounded-full border object-cover"
               />
-              <div>
+              <div className="flex-1">
                 <div className="flex items-center gap-4 mb-1">
                   <span className="font-semibold">{review.user}</span>
                   <span className="text-xs text-gray-500">
-                    {review.date
-                      ? new Date(review.date).toLocaleDateString('en-GB', {
-                          day: '2-digit',
-                          month: 'long',
-                          year: 'numeric',
-                        })
-                      : 'Unknown Date'}
+                    {new Date(review.date).toLocaleDateString('en-GB', {
+                      day: '2-digit',
+                      month: 'long',
+                      year: 'numeric',
+                    })}
                   </span>
+                  {user && user.id === review.userId && (
+                    <button
+                      className="ml-auto text-red-500 text-sm hover:text-red-700"
+                      onClick={() => handleDeleteReview(review.id)}
+                    >
+                      Delete
+                    </button>
+                  )}
                 </div>
-                <p className="text-gray-700">{review.text || 'No comment.'}</p>
+                <p className="text-gray-700">{review.text}</p>
               </div>
             </div>
           ))
