@@ -22,7 +22,7 @@ export default function BookDetail() {
     text: review.comment || '',
     date: review.createdAt || new Date().toISOString(),
     avatar: review.userImage || 'https://i.pravatar.cc/150?img=7',
-    userId: review.userId,
+    userId: review.userId, // testing
   });
 
   const handleDeleteReview = async (reviewId) => {
