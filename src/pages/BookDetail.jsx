@@ -22,7 +22,7 @@ export default function BookDetail() {
     text: review.comment || '',
     date: review.createdAt || new Date().toISOString(),
     avatar: review.userImage || 'https://i.pravatar.cc/150?img=7',
-    userId: review.userId,
+    userId: review.userId, // testing
   });
 
   const handleDeleteReview = async (reviewId) => {
@@ -315,52 +315,62 @@ export default function BookDetail() {
             onChange={(e) => setReviewText(e.target.value)}
           />
           <button
-            className="bg-[#C6A986] hover:bg-[#a78e6d] text-white px-4 py-2 rounded-full transition duration-300"
+            className="bg-[#C6A986] hover:bg-[#a78e6d] text-white px-4 py-2 rounded-lg transition-all"
             onClick={handleAddReview}
           >
-            Add Review
+            Submit Review
           </button>
-        </div>
-      </div>
 
-      <div className="mt-10">
-        <h2 className="text-2xl font-bold mb-4">Reviews</h2>
-        {reviews.length > 0 ? (
-          reviews.map((review, idx) => (
-            <div key={idx} className="flex gap-4 items-start mb-8">
-              <img
-                src={review.avatar}
-                alt={`${review.user}'s avatar`}
-                className="w-12 h-12 rounded-full border object-cover"
-              />
-              <div className="flex-1">
-                <div className="flex items-center gap-4 mb-1">
-                  <span className="font-semibold">{review.user}</span>
-                  <span className="text-xs text-gray-500">
-                    {new Date(review.date).toLocaleDateString('en-GB', {
-                      day: '2-digit',
-                      month: 'long',
-                      year: 'numeric',
-                    })}
-                  </span>
-                  {user && user.id === review.userId && (
-                    <button
-                      className="ml-auto text-red-500 text-sm hover:text-red-700"
-                      onClick={() => handleDeleteReview(review.id)}
-                    >
-                      Delete
-                    </button>
-                  )}
-                </div>
-                <p className="text-gray-700">{review.text}</p>
+          <div className="mt-8">
+            <h2 className="text-2xl font-semibold mb-4">Reviews</h2>
+
+            {reviews.length === 0 ? (
+              <p className="text-gray-500 text-sm">
+                Be the first to review this book!
+              </p>
+            ) : (
+              <div className="space-y-4">
+                {reviews.map((review) => (
+                  <div
+                    key={review.id}
+                    className="p-4 bg-gray-100 rounded-lg shadow-sm"
+                  >
+                    <div className="flex items-center gap-3 mb-2">
+                      <img
+                        src={review.avatar}
+                        alt={review.user}
+                        className="w-10 h-10 rounded-full"
+                      />
+                      <div className="flex-1">
+                        <p className="text-sm font-semibold text-gray-800">
+                          {review.user}
+                        </p>
+                        <p className="text-xs text-gray-500">
+                          {new Date(review.date).toLocaleString('en-US', {
+                            day: 'numeric',
+                            month: 'short',
+                            year: 'numeric',
+                            hour: '2-digit',
+                            minute: '2-digit',
+                          })}
+                        </p>
+                      </div>
+                      {user?.id === review.userId && (
+                        <button
+                          onClick={() => handleDeleteReview(review.id)}
+                          className="text-red-600 hover:text-red-500 transition-colors"
+                        >
+                          Delete
+                        </button>
+                      )}
+                    </div>
+                    <p className="text-gray-700">{review.text}</p>
+                  </div>
+                ))}
               </div>
-            </div>
-          ))
-        ) : (
-          <p className="text-gray-500">
-            No reviews yet. Be the first to review!
-          </p>
-        )}
+            )}
+          </div>
+        </div>
       </div>
     </main>
   );
