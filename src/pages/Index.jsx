@@ -48,12 +48,9 @@ export default function Home() {
         <img src={Hero} alt="Hero Illustration" className="h-50" />
       </div>
 
-      <div className="flex items-center justify-between px-15">
+      <div className="flex items-center justify-between px-15 mt-5">
         <h1 className="text-3xl font-bold my-4">Popular Books</h1>
-        <div className="flex gap-2">
-          <CircleChevronLeft size={36} color="#4B5343" />
-          <CircleChevronRight size={36} color="#4B5343" />
-        </div>
+
       </div>
 
       {loading ? (

@@ -11,6 +11,19 @@ export default function BookDetail() {
   const [error, setError] = useState(null);
   const [reviewText, setReviewText] = useState('');
   const [isFavourite, setIsFavourite] = useState(false);
+  const [reviews, setReviews] = useState([]);
+
+  const token = localStorage.getItem('token');
+
+  const normalizeReview = (review) => ({
+    user:
+      typeof review.user === 'object'
+        ? review.user.name || review.user.username || 'Anonymous'
+        : review.user || 'Anonymous',
+    text: review.comment || '',
+    date: review.createdAt || new Date().toISOString(),
+    avatar: review.user?.avatar || 'https://i.pravatar.cc/150?img=7',
+  });
 
   useEffect(() => {
     const fetchBookDetails = async () => {
@@ -19,8 +32,6 @@ export default function BookDetail() {
         const response = await axios.get(
           `${import.meta.env.VITE_API_URL}/books/${id}`
         );
-        console.log('API Response:', response.data);
-
         const rawBook = response.data.book || response.data;
 
         if (rawBook && rawBook.id) {
@@ -37,7 +48,6 @@ export default function BookDetail() {
             pages: rawBook.pages || '-',
             isbn: rawBook.isbn || '-',
             language: rawBook.language || '-',
-            reviews: rawBook.reviews || [],
           });
         } else {
           setError('Book not found.');
@@ -50,7 +60,29 @@ export default function BookDetail() {
       }
     };
 
+    const fetchReviews = async () => {
+      try {
+        const res = await axios.get(
+          `${import.meta.env.VITE_API_URL}/reviews/${id}`
+        );
+        const rawData = Array.isArray(res.data)
+          ? res.data
+          : Array.isArray(res.data.reviews)
+          ? res.data.reviews
+          : [];
+
+        setReviews(
+          rawData
+            .filter((rev) => rev && (rev.comment || rev.text))
+            .map(normalizeReview)
+        );
+      } catch (err) {
+        console.error('Failed to fetch reviews:', err);
+      }
+    };
+
     fetchBookDetails();
+    fetchReviews();
   }, [id]);
 
   useEffect(() => {
@@ -85,8 +117,45 @@ export default function BookDetail() {
     setIsFavourite(!isFavourite);
   };
 
-  const handleAddReview = () => {
-    navigate('/Signin');
+  const handleAddReview = async () => {
+    if (!token) {
+      console.warn('Token tidak ada, redirect ke /Signin');
+      navigate('/Signin');
+      return;
+    }
+
+    if (!reviewText.trim() || reviewText.trim().length < 5) {
+      alert('Review terlalu pendek.');
+      return;
+    }
+
+    try {
+      const res = await axios.post(
+        `${import.meta.env.VITE_API_URL}/reviews`,
+        {
+          bookId: id,
+          comment: reviewText.trim(),
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      setReviewText('');
+      setReviews((prev) => [
+        normalizeReview(res.data),
+        ...(Array.isArray(prev) ? prev : []),
+      ]);
+    } catch (err) {
+      console.error('Gagal menyimpan review:', err);
+      alert(err.response?.data?.message || 'Gagal menyimpan review');
+
+      if (err.response?.status === 401) {
+        navigate('/Signin');
+      }
+    }
   };
 
   if (loading) {
@@ -109,21 +178,15 @@ export default function BookDetail() {
           <div className="w-full md:w-1/3 flex justify-center">
             <img
               src={
-                book.cover ||
+                book?.cover ||
                 'https://via.placeholder.com/300x450?text=Not+Found'
               }
-              onError={(e) => {
-                e.target.onerror = null;
-                e.target.src =
-                  'https://via.placeholder.com/300x450?text=Not+Found';
-              }}
               alt="Book cover"
-              className="w-full max-w-xs max-h-[400px] md:max-h-[450px] object-cover rounded-lg shadow-lg"
+              className="w-full max-w-xs max-h-[400px] object-cover rounded-lg shadow-lg"
             />
           </div>
           <div className="w-full md:w-2/3">
             <h1 className="text-3xl font-bold">Book not found</h1>
-            <p className="text-gray-700 text-lg mt-1 mb-2">by Unknown</p>
             <p className="text-gray-800 mb-4">
               {error || 'Book data is unavailable.'}
             </p>
@@ -138,22 +201,16 @@ export default function BookDetail() {
       <div className="flex flex-col md:flex-row gap-8">
         <div className="w-full md:w-1/3 flex justify-center">
           <img
-            src={
-              book.cover || 'https://via.placeholder.com/300x450?text=Not+Found'
-            }
-            onError={(e) => {
-              e.target.onerror = null;
-              e.target.src =
-                'https://via.placeholder.com/300x450?text=Not+Found';
-            }}
+            src={book.cover}
             alt="Book cover"
-            className=" max-w-xs max-h-[300px] object-cover rounded-lg shadow-lg"
+            className="max-w-xs max-h-[300px] object-cover rounded-lg shadow-lg"
           />
         </div>
 
         <div className="w-full md:w-2/3">
           <h1 className="text-3xl font-bold">{book.title}</h1>
           <p className="text-gray-700 text-lg mt-1 mb-2">by {book.author}</p>
+
           <div className="flex gap-2 mb-3 flex-wrap">
             {book.genres.map((genre, index) => (
               <span
@@ -164,18 +221,18 @@ export default function BookDetail() {
               </span>
             ))}
           </div>
+
           <div
             className="text-gray-800 mb-4 prose prose-sm max-w-none"
             dangerouslySetInnerHTML={{ __html: book.description }}
           />
 
           <button
-            className={`flex items-center gap-2 mb-2 border-2 rounded-full p-2 transition-colors
-              ${
-                isFavourite
-                  ? 'bg-[#C6A986] text-white border-[#C6A986]'
-                  : 'text-gray-700 hover:text-[#C6A986] border-gray-800 hover:border-[#C6A986]'
-              }`}
+            className={`flex items-center gap-2 mb-2 border-2 rounded-full p-2 transition-colors ${
+              isFavourite
+                ? 'bg-[#C6A986] text-white border-[#C6A986]'
+                : 'text-gray-700 hover:text-[#C6A986] border-gray-800 hover:border-[#C6A986]'
+            }`}
             onClick={handleToggleFavourite}
           >
             <Star className={`w-5 h-5 ${isFavourite ? 'fill-white' : ''}`} />
@@ -230,8 +287,8 @@ export default function BookDetail() {
 
       <div className="mt-10">
         <h2 className="text-2xl font-bold mb-4">Reviews</h2>
-        {book.reviews && book.reviews.length > 0 ? (
-          book.reviews.map((review, idx) => (
+        {reviews.length > 0 ? (
+          reviews.map((review, idx) => (
             <div key={idx} className="flex gap-4 items-start mb-8">
               <img
                 src={review.avatar}
@@ -242,14 +299,16 @@ export default function BookDetail() {
                 <div className="flex items-center gap-4 mb-1">
                   <span className="font-semibold">{review.user}</span>
                   <span className="text-xs text-gray-500">
-                    {new Date(review.date).toLocaleDateString('en-GB', {
-                      day: '2-digit',
-                      month: 'long',
-                      year: 'numeric',
-                    })}
+                    {review.date
+                      ? new Date(review.date).toLocaleDateString('en-GB', {
+                          day: '2-digit',
+                          month: 'long',
+                          year: 'numeric',
+                        })
+                      : 'Unknown Date'}
                   </span>
                 </div>
-                <p className="text-gray-700">{review.text}</p>
+                <p className="text-gray-700">{review.text || 'No comment.'}</p>
               </div>
             </div>
           ))
