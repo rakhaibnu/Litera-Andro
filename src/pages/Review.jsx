@@ -28,42 +28,27 @@ export default function Reviews() {
   const fetchAllReviews = async () => {
     try {
       setLoading(true);
-      const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000';
-      const bookIdsWithReviews = [];
-      const favorites = JSON.parse(localStorage.getItem('favorites')) || [];
-      bookIdsWithReviews.push(...favorites.map((book) => book.id));
-      if (bookIdsWithReviews.indexOf('oNY0DwAAQBAJ') === -1) {
-        bookIdsWithReviews.push('oNY0DwAAQBAJ');
-      }
-      let allReviews = [];
-      for (const bookId of bookIdsWithReviews) {
-        try {
-          const response = await axios.get(`${apiUrl}/reviews/${bookId}`);
-          if (response.data.success && response.data.data) {
-            const bookResponse = await axios.get(`${apiUrl}/books/${bookId}`);
-            const bookDetails = bookResponse.data.book || {};
-            const reviewsWithBookDetails = response.data.data.map((review) => ({
-              id: review.id || `${bookId}-${review.user}-${Date.now()}`,
-              text: review.comment || '',
-              user: review.user || review.username || 'Anonymous',
-              userId: review.userId,
-              rating: 5,
-              date: review.createdAt,
-              bookId: bookId,
-              bookTitle: bookDetails.title || 'Unknown Title',
-              bookAuthor: bookDetails.authors || 'Unknown Author',
-              bookCover:
-                bookDetails.thumbnail || 'https://via.placeholder.com/150',
-              bookDescription:
-                bookDetails.description || 'No description available',
-            }));
-            allReviews = [...allReviews, ...reviewsWithBookDetails];
-          }
-        } catch (err) {
-          // continue
-        }
-      }
-      setReviews(allReviews);
+      const apiUrl = 'https://backend-litera.vercel.app';
+      const response = await axios.get(`${apiUrl}/reviews`);
+      // Asumsi response.data.data adalah array review lengkap dengan detail buku
+      const reviewsWithBookDetails = (response.data.data || []).map((r) => ({
+        id: r.id,
+        text: r.comment,
+        user: r.username || r.user || 'Anonymous',
+        userId: r.userId,
+        rating: r.rating || 5,
+        date: r.createdAt,
+        bookId: r.bookId,
+        bookTitle: r.bookTitle || r.book?.title,
+        bookAuthor: r.bookAuthors || r.book?.authors,
+        bookCover:
+          r.bookThumbnail ||
+          r.book?.thumbnail ||
+          r.thumbnail ||
+          'https://via.placeholder.com/150',
+        bookDescription: r.bookDescription || r.book?.description,
+      }));
+      setReviews(reviewsWithBookDetails);
     } catch (error) {
       setError('Failed to load reviews. Please try again.');
     } finally {
