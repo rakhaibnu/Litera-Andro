@@ -196,11 +196,6 @@ export default function Reviews() {
         </div>
         <div className="w-full sm:w-2/3 flex justify-end items-center pb-4">
           <div className="flex gap-2">
-            <Button
-              onClick={() => window.location.reload()}
-              text="Refresh"
-              className="bg-warm-sand-6 hover:bg-sage-green-8 text-white text-sm px-4 py-2 rounded-full transition duration-300"
-            />
             {loading && (
               <Button
                 onClick={handleShowMockData}

@@ -9,7 +9,7 @@ export default function BookCard({ book }) {
         <img
           src={book.cover}
           alt={book.title}
-          className="w-full h-48 object-cover rounded-md transition-all duration-300 group-hover:scale-105"
+          className="w-full h-full max-h-64 object-contain rounded-md transition-all duration-300 group-hover:scale-105"
         />
 
         <h3 className="text-lg font-bold mt-2 text-gray-800 transition-all duration-300 ">

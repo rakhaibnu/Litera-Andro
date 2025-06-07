@@ -11,7 +11,7 @@ export default function Profile() {
     email: '',
     image: null,
     reviewCount: 0,
-    favoriteCount: 0
+    favoriteCount: 0,
   });
   const navigate = useNavigate();
 
@@ -38,7 +38,8 @@ export default function Profile() {
         if (response.data.success) {
           setUserData({
             ...response.data.data,
-            image: response.data.data.image || localStorage.getItem('userProfile')
+            image:
+              response.data.data.image || localStorage.getItem('userProfile'),
           });
         }
       } catch (error) {
@@ -55,20 +56,52 @@ export default function Profile() {
 
   const handleLogout = async () => {
     try {
+      // Cek API URL
+      const apiUrl =
+        import.meta.env.VITE_API_URL || 'https://backend-litera.vercel.app';
+      console.log('Logout URL:', `${apiUrl}/auth/logout`);
+
       const token = localStorage.getItem('token');
-      await axios.post(
-        `${import.meta.env.VITE_API_URL}/auth/logout`,
-        {},
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      localStorage.clear();
+      if (!token) {
+        // Token tidak ada, langsung hapus data dan arahkan ke signin
+        console.log('No token found, redirecting to signin');
+        localStorage.clear();
+        navigate('/signin');
+        return;
+      }
+
+      try {
+        // Panggil API logout
+        await axios.post(
+          `${apiUrl}/auth/logout`,
+          {},
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        console.log('Logout API call successful');
+      } catch (apiError) {
+        // Tangani error API, tapi tetap lanjutkan proses logout
+        console.error('API logout error:', apiError);
+        // Tetap logout meskipun API gagal
+      }
+
+      // Hapus semua data dari localStorage
+      localStorage.removeItem('token');
+      localStorage.removeItem('user');
+      localStorage.removeItem('userProfile');
+      localStorage.removeItem('favorites');
+      localStorage.removeItem('reviewedBooks');
+
+      console.log('Local storage cleared, redirecting to signin');
+
+      // Arahkan ke halaman signin
       navigate('/signin');
     } catch (error) {
       console.error('Logout error:', error);
+      // Jika terjadi error, tetap coba hapus data dan arahkan ke signin
       localStorage.clear();
       navigate('/signin');
     }
@@ -163,7 +196,9 @@ export default function Profile() {
               <span className="text-lg text-gray-700 mt-1">Reviewed Book</span>
             </div>
             <div className="flex flex-col items-center border border-gray-400 rounded-[12px] px-10 py-6 bg-white w-[220px]">
-              <span className="text-3xl font-bold">{userData.favoriteCount}</span>
+              <span className="text-3xl font-bold">
+                {userData.favoriteCount}
+              </span>
               <span className="text-lg text-gray-700 mt-1">Favourite Book</span>
             </div>
           </div>
