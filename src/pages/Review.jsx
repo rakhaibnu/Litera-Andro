@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import SearchBar from '../components/SearchBar';
 import Button from '../components/Button';
 import axios from 'axios';
+import React from 'react';
 
 export default function Reviews() {
   const [searchQuery, setSearchQuery] = useState('');
@@ -12,6 +13,7 @@ export default function Reviews() {
   const [reviews, setReviews] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [mode, setMode] = useState('my'); // 'my' or 'all'
   const navigate = useNavigate();
 
   // Check if user is logged in
@@ -22,72 +24,92 @@ export default function Reviews() {
     }
   }, []);
 
-  // Fetch all reviews by making multiple requests to existing endpoints
-  useEffect(() => {
-    const fetchAllReviews = async () => {
-      try {
-        setLoading(true);
-        // Since there's no /reviews/all, we'll use another approach
-        const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000';
-        
-        // First, let's fetch some popular books or books we know have reviews
-        const bookIdsWithReviews = [];
-        
-        // Get book IDs from localStorage - these are likely books the user has already viewed
-        const favorites = JSON.parse(localStorage.getItem('favorites')) || [];
-        bookIdsWithReviews.push(...favorites.map(book => book.id));
-        
-        // Add some hardcoded IDs that we know from your screenshots
-        if (bookIdsWithReviews.indexOf('oNY0DwAAQBAJ') === -1) {
-          bookIdsWithReviews.push('oNY0DwAAQBAJ');
-        }
-        
-        let allReviews = [];
-        
-        // For each book ID, fetch its reviews
-        for (const bookId of bookIdsWithReviews) {
-          try {
-            const response = await axios.get(`${apiUrl}/reviews/${bookId}`);
-            if (response.data.success && response.data.data) {
-              // Also fetch book details to match our UI requirements
-              const bookResponse = await axios.get(`${apiUrl}/books/${bookId}`);
-              const bookDetails = bookResponse.data.book || {};
-              
-              // Map the reviews with book details
-              const reviewsWithBookDetails = response.data.data.map(review => ({
-                id: review.id || `${bookId}-${review.user}-${Date.now()}`,
-                text: review.comment || '',
-                user: review.user || review.username || 'Anonymous',
-                userId: review.userId,
-                rating: 5, // Default rating since it's not in your schema
-                date: review.createdAt,
-                bookId: bookId,
-                bookTitle: bookDetails.title || 'Unknown Title',
-                bookAuthor: bookDetails.authors || 'Unknown Author',
-                bookCover: bookDetails.thumbnail || 'https://via.placeholder.com/150',
-                bookDescription: bookDetails.description || 'No description available'
-              }));
-              
-              allReviews = [...allReviews, ...reviewsWithBookDetails];
-            }
-          } catch (err) {
-            console.error(`Error fetching reviews for book ${bookId}:`, err);
-            // Continue with other books even if one fails
-          }
-        }
-        
-        setReviews(allReviews);
-        
-      } catch (error) {
-        console.error('Error fetching reviews:', error);
-        setError('Failed to load reviews. Please try again.');
-      } finally {
-        setLoading(false);
+  // Fetch All Reviews
+  const fetchAllReviews = async () => {
+    try {
+      setLoading(true);
+      const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+      const bookIdsWithReviews = [];
+      const favorites = JSON.parse(localStorage.getItem('favorites')) || [];
+      bookIdsWithReviews.push(...favorites.map((book) => book.id));
+      if (bookIdsWithReviews.indexOf('oNY0DwAAQBAJ') === -1) {
+        bookIdsWithReviews.push('oNY0DwAAQBAJ');
       }
-    };
+      let allReviews = [];
+      for (const bookId of bookIdsWithReviews) {
+        try {
+          const response = await axios.get(`${apiUrl}/reviews/${bookId}`);
+          if (response.data.success && response.data.data) {
+            const bookResponse = await axios.get(`${apiUrl}/books/${bookId}`);
+            const bookDetails = bookResponse.data.book || {};
+            const reviewsWithBookDetails = response.data.data.map((review) => ({
+              id: review.id || `${bookId}-${review.user}-${Date.now()}`,
+              text: review.comment || '',
+              user: review.user || review.username || 'Anonymous',
+              userId: review.userId,
+              rating: 5,
+              date: review.createdAt,
+              bookId: bookId,
+              bookTitle: bookDetails.title || 'Unknown Title',
+              bookAuthor: bookDetails.authors || 'Unknown Author',
+              bookCover:
+                bookDetails.thumbnail || 'https://via.placeholder.com/150',
+              bookDescription:
+                bookDetails.description || 'No description available',
+            }));
+            allReviews = [...allReviews, ...reviewsWithBookDetails];
+          }
+        } catch (err) {
+          // continue
+        }
+      }
+      setReviews(allReviews);
+    } catch (error) {
+      setError('Failed to load reviews. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  };
 
-    fetchAllReviews();
-  }, []);
+  // Fetch My Reviews
+  const fetchMyReviews = async () => {
+    try {
+      setLoading(true);
+      const token = localStorage.getItem('token');
+      const apiUrl = 'https://backend-litera.vercel.app';
+      const response = await axios.get(`${apiUrl}/my-reviews`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      const reviewsWithBookDetails = (response.data.data || []).map((r) => ({
+        id: r.id,
+        text: r.comment,
+        user: r.username || 'Anonymous',
+        userId: r.userId,
+        rating: 5,
+        date: r.createdAt,
+        bookId: r.bookId,
+        bookTitle: r.bookTitle,
+        bookAuthor: r.bookAuthors,
+        bookCover: r.bookThumbnail,
+        bookDescription: r.bookDescription,
+      }));
+      setReviews(reviewsWithBookDetails);
+    } catch (error) {
+      setError('Failed to load reviews. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Fetch reviews when mode changes
+  useEffect(() => {
+    setError(null);
+    if (mode === 'my') {
+      fetchMyReviews();
+    } else {
+      fetchAllReviews();
+    }
+  }, [mode]);
 
   const filteredReviews = reviews.filter(
     (review) =>
@@ -133,8 +155,10 @@ export default function Reviews() {
         bookId: 'oNY0DwAAQBAJ',
         bookTitle: 'Design Patterns',
         bookAuthor: 'Erich Gamma et al.',
-        bookCover: 'https://books.google.com/books/content?id=oNY0DwAAQBAJ&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs-api',
-        bookDescription: 'Capturing a wealth of experience about the design of object-oriented software, four top-notch designers present a catalog of simple and succinct solutions to commonly occurring design problems.'
+        bookCover:
+          'https://books.google.com/books/content?id=oNY0DwAAQBAJ&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs-api',
+        bookDescription:
+          'Capturing a wealth of experience about the design of object-oriented software, four top-notch designers present a catalog of simple and succinct solutions to commonly occurring design problems.',
       },
       {
         id: '2',
@@ -144,11 +168,13 @@ export default function Reviews() {
         rating: 5,
         date: '2025-06-07T01:47:00',
         bookId: 'oNY0DwAAQBAJ',
-        bookTitle: 'Design Patterns', 
+        bookTitle: 'Design Patterns',
         bookAuthor: 'Erich Gamma et al.',
-        bookCover: 'https://books.google.com/books/content?id=oNY0DwAAQBAJ&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs-api',
-        bookDescription: 'Capturing a wealth of experience about the design of object-oriented software, four top-notch designers present a catalog of simple and succinct solutions to commonly occurring design problems.'
-      }
+        bookCover:
+          'https://books.google.com/books/content?id=oNY0DwAAQBAJ&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs-api',
+        bookDescription:
+          'Capturing a wealth of experience about the design of object-oriented software, four top-notch designers present a catalog of simple and succinct solutions to commonly occurring design problems.',
+      },
     ];
     setReviews(mockReviews);
     setLoading(false);
@@ -158,41 +184,44 @@ export default function Reviews() {
     <div className="container mx-auto py-24 max-w-6xl space-y-12 w-full min-h-screen">
       <div className="flex flex-col items-center gap-4">
         <h1 className="text-4xl font-bold text-center">Reviewed Books</h1>
-
-        <div className="w-full sm:w-2/3 pt-4">
+        <div className="w-full sm:w-2/3 pt-4 flex flex-col gap-2">
           <SearchBar
             onSearch={setSearchQuery}
             placeholder="Search books by title, author, or review content..."
-            className="w-full sm:w-2/3 border rounded-full px-4 shadow"
+            className="w-full border rounded-full px-4 shadow"
           />
-        </div>
-
-        <div className="w-full sm:w-2/3 flex justify-between items-center pb-4">
-          <div className="relative w-40">
+          <div className="flex gap-2 mt-2">
             <select
-              className="appearance-none w-full pl-3 pr-8 py-2 border border-latte-cream-10 rounded-full"
+              value={mode}
+              onChange={(e) => setMode(e.target.value)}
+              className="flex-1 border border-sage-green-8 rounded-full px-4 py-2 text-sm focus:outline-none"
+            >
+              <option value="my">My Reviews</option>
+              <option value="all">All Reviews</option>
+            </select>
+            <select
               value={sortOption}
               onChange={(e) => setSortOption(e.target.value)}
+              className="flex-1 border border-sage-green-8 rounded-full px-4 py-2 text-sm focus:outline-none"
             >
               <option value="newest">Newest First</option>
               <option value="oldest">Oldest First</option>
             </select>
-            <ChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 text-latte-cream-10 pointer-events-none" />
           </div>
+        </div>
+        <div className="w-full sm:w-2/3 flex justify-end items-center pb-4">
           <div className="flex gap-2">
-            <button
+            <Button
               onClick={() => window.location.reload()}
-              className="bg-warm-sand-6 hover:bg-sage-green-8 text-white text-sm text-center px-4 py-2 rounded-full transition duration-300"
-            >
-              Refresh
-            </button>
+              text="Refresh"
+              className="bg-warm-sand-6 hover:bg-sage-green-8 text-white text-sm px-4 py-2 rounded-full transition duration-300"
+            />
             {loading && (
-              <button
+              <Button
                 onClick={handleShowMockData}
-                className="bg-gray-500 hover:bg-gray-600 text-white text-sm text-center px-4 py-2 rounded-full transition duration-300"
-              >
-                Show Sample Data
-              </button>
+                text="Show Sample Data"
+                className="bg-gray-500 hover:bg-gray-600 text-white text-sm px-4 py-2 rounded-full transition duration-300"
+              />
             )}
           </div>
         </div>
@@ -285,7 +314,7 @@ export default function Reviews() {
                       <Button
                         onClick={() => handleSeeReview(review.bookId)}
                         text="See Book Details"
-                        className="bg-warm-sand-6 hover:bg-sage-green-8 text-white text-sm text-center px-4 py-2 rounded-full transition duration-300"
+                        className="bg-warm-sand-6 hover:bg-sage-green-8 text-white text-sm px-4 py-2 rounded-full transition duration-300 mt-2 sm:mt-0"
                       />
                     </div>
                   </div>
@@ -296,7 +325,9 @@ export default function Reviews() {
         ) : (
           <div className="text-center py-12">
             <p className="text-gray-500">
-              {searchQuery ? 'No reviews found matching your search' : 'No reviews yet. Be the first to review a book!'}
+              {searchQuery
+                ? 'No reviews found matching your search'
+                : 'No reviews yet. Be the first to review a book!'}
             </p>
           </div>
         )}
